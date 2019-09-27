@@ -4,7 +4,7 @@ Demo for security basics talks
 **WORK IN PROGRESS**
 
 ## Things I'm thinking of including for the showcase
-- [ ] robots.txt
+- [x] robots.txt
 - [ ] hsts
 - [ ] csp
 - [ ] referrer policy
@@ -23,7 +23,7 @@ Demo for security basics talks
 - [ ] csrf / xsrf
 - [ ] insecure direct object references
 - [ ] mass assignment risk
-- [ ] security.txt (https://securitytxt.org/)
+- [x] security.txt (https://securitytxt.org/)
 
 Should be way more than enough.
 
