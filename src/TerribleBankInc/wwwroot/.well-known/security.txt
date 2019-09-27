@@ -1,0 +1,7 @@
+﻿Contact: mailto:security@terriblebank.com
+Encryption: https://localhost:44300/MySigningKey.txt
+Acknowledgments: https://localhost:44300/Home/Acknowledgments
+Preferred-Languages: en-US
+Canonical: https://localhost:44300/.well-known/security.txt
+Policy: https://localhost:44300/Home/Policy
+Hiring: https://localhost:44300/Home/Hiring

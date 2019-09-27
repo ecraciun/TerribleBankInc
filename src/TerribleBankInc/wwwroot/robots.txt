@@ -1,0 +1,8 @@
+﻿User-agent: *
+User-agent: APIs-Google
+User-agent: Mediapartners-Google
+User-agent: AdsBot-Google-Mobile
+User-agent: AdsBot-Google
+User-agent: Googlebot
+User-agent: DuplexWeb-Google
+Disallow: /Backoffice/*
