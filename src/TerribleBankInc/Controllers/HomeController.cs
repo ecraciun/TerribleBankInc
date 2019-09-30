@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using TerribleBankInc.Models;
+using TerribleBankInc.ViewModels;
 
 namespace TerribleBankInc.Controllers
 {

@@ -1,6 +1,4 @@
-using System;
-
-namespace TerribleBankInc.Models
+namespace TerribleBankInc.ViewModels
 {
     public class ErrorViewModel
     {

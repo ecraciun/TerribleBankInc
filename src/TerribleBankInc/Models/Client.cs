@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+
 namespace TerribleBankInc.Models
 {
     public class Client : BaseEntity
@@ -7,7 +10,9 @@ namespace TerribleBankInc.Models
         public string Address { get; set; }
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
-        
+        public DateTime DateOfBirth { get; set; }
 
+        public User User { get; set; }
+        public List<BankAccount> BankAccounts { get; set; }
     }
 }
