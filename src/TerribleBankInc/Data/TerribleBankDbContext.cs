@@ -14,6 +14,7 @@ namespace TerribleBankInc.Data
         public DbSet<Client> Clients { get; set; }
         public DbSet<BankAccount> BankAccounts { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<BankTransaction> Transactions { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -22,6 +23,7 @@ namespace TerribleBankInc.Data
             modelBuilder.ApplyConfiguration(new BankAccountEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ClientEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new UserEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new BankTransactionEntityTypeConfiguration());
         }
     }
 }
