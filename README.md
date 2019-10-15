@@ -29,7 +29,7 @@ Should be way more than enough.
 
 ## Functionals features I'm thinking of including
 - [ ] login / register / logout / forgot password / change password
-- [ ] view/edit profile info
+- [x] view/edit profile info
 - [ ] view & manage accounts: list, create, delete
 - [ ] transfers: send to, history with search
 
