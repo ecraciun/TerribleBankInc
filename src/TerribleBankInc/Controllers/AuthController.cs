@@ -30,12 +30,21 @@ namespace TerribleBankInc.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel loginViewModel)
         {
-            var clientId = await _authenticationService.LoginAsync(loginViewModel.Username, loginViewModel.Password);
-            if (clientId == default)
+            if (ModelState.IsValid)
             {
-                ModelState.AddModelError("", "");
-                return View();
+                var loginResult = await _authenticationService.LoginAsync(loginViewModel.Username, loginViewModel.Password);
+                if (loginResult.IsSuccess)
+                {
+                    //TODO: handle auth
+                    return RedirectToAction(nameof(HomeController.Index), "Home");
+                }
+                else
+                {
+                    ModelState.AddModelError("", loginResult.Message);
+                }
             }
+
+            return View(loginViewModel);
 
             //var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
             //identity.AddClaim(new Claim(ClaimTypes.Name, user.Ssn));
@@ -49,14 +58,32 @@ namespace TerribleBankInc.Controllers
 
             //var principal = new ClaimsPrincipal(identity);
             //await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-
-            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]
         public async Task<IActionResult> Register()
         {
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterViewModel registerViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _authenticationService.RegisterAsync(registerViewModel);
+                if (result.IsSuccess)
+                {
+                    //TODO: handle auth
+                    return RedirectToAction(nameof(HomeController.Index), "Home");
+                }
+                else
+                {
+                    ModelState.AddModelError("", result.Message);
+                }
+                
+            }
+            return View(registerViewModel);
         }
 
         public async Task<IActionResult> Logout()

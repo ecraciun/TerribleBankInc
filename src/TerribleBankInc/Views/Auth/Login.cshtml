@@ -8,11 +8,12 @@
 <form asp-controller="Auth" asp-action="Login" method="post">
     <div>
         <label asp-for="Username">Username</label>
-        <input asp-for="Username"/>
+        <input asp-for="Username" />
     </div>
     <div>
         <label asp-for="Password">Password</label>
         <input asp-for="Password" />
     </div>
-    <input type="submit" value="Login"/>
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="submit" value="Login" />
 </form>

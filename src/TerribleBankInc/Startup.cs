@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using TerribleBankInc.Data;
 using TerribleBankInc.Repositories;
 using TerribleBankInc.Services;
+using AutoMapper;
+using System.Reflection;
 
 namespace TerribleBankInc
 {
@@ -23,6 +25,8 @@ namespace TerribleBankInc
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
             services.AddDbContext<TerribleBankDbContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
@@ -37,6 +41,12 @@ namespace TerribleBankInc
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetService<TerribleBankDbContext>();
+                context?.Database.Migrate();
+            }
+
             app.UseAuthentication();
 
             if (env.IsDevelopment())

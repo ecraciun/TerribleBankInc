@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoMapper;
+using System;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -13,11 +14,13 @@ namespace TerribleBankInc.Services
     {
         private readonly IBaseRepository<Client> _clientRepository;
         private readonly IBaseRepository<User> _userRepository;
+        private readonly IMapper _mapper;
 
-        public AuthenticationService(IBaseRepository<Client> clientRepository, IBaseRepository<User> userRepository)
+        public AuthenticationService(IBaseRepository<Client> clientRepository, IBaseRepository<User> userRepository, IMapper mapper)
         {
             _clientRepository = clientRepository;
             _userRepository = userRepository;
+            _mapper = mapper;
         }
 
         public async Task<LoginResult> LoginAsync(string username, string password)
@@ -47,27 +50,42 @@ namespace TerribleBankInc.Services
 
             return new LoginResult
             {
-                ClientUser = new ClientUser
-                {
-                    ClientId = client.ID,
-                    UserId = user.ID,
-                    Email = client.Email,
-                    IsAdmin = user.IsAdmin,
-                    FirstName = client.FirstName,
-                    LastName = client.LastName
-                },
+                ClientUser = _mapper.Map<ClientUser>(client),
                 IsSuccess = true
             };
         }
 
         public async Task<bool> ChangePasswordAsync(int userId, string oldPassword, string newPassword)
         {
-            throw new NotImplementedException();
+            var user = await _userRepository.FindAsync(userId);
+            if(user != null && user.HashedPassword.Equals(GetHash(oldPassword)))
+            {
+                user.HashedPassword = GetHash(newPassword);
+                await _userRepository.UpdateAsync(user);
+                return true;
+            }
+            return false;
         }
 
-        public async Task<LoginResult> RegisterAsync(RegisterViewModel user)
+        public async Task<LoginResult> RegisterAsync(RegisterViewModel userVm)
         {
-            throw new NotImplementedException();
+            var client = _mapper.Map<Client>(userVm);
+            client = await _clientRepository.AddAsync(client);
+            
+            var user = new User
+            {
+                ClientId = client.ID,
+                Username = client.Email,
+                HashedPassword = GetHash(userVm.Password),
+                IsAdmin = false
+            };
+            await _userRepository.AddAsync(user);
+
+            return new LoginResult
+            {
+                IsSuccess = true,
+                ClientUser = _mapper.Map<ClientUser>(client)
+            };
         }
 
         private string GetHash(string input)
