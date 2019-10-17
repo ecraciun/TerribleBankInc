@@ -8,6 +8,7 @@ namespace TerribleBankInc.Models.Entities
         public int SourceClientId { get; set; }
         public int DestinationClientId { get; set; }
         public string DestinationClientEmail { get; set; }
+        public string DestinationAccountNumber { get; set; }
         public int SourceAccountId { get; set; }
         public int? DestinationAccountId { get; set; }
         public bool Approved { get; set; }

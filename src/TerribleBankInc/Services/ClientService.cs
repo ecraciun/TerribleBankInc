@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using System.Threading.Tasks;
-using TerribleBankInc.Models;
 using TerribleBankInc.Models.Entities;
 using TerribleBankInc.Models.ViewModels;
-using TerribleBankInc.Repositories;
 using TerribleBankInc.Repositories.Interfaces;
 using TerribleBankInc.Services.Interfaces;
 

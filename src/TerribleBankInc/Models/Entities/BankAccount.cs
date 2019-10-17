@@ -9,6 +9,8 @@ namespace TerribleBankInc.Models.Entities
         public string AccountNumber { get; set; }
         public decimal Balance { get; set; }
         public int ClientId { get; set; }
+        public bool Enabled { get; set; }
+        public bool Approved { get; set; }
 
         public Client Client { get; set; }
         public List<BankTransaction> IncomingTransactions { get; set; }

@@ -93,6 +93,11 @@ namespace TerribleBankInc.Services
             };
         }
 
+        public Task<bool> CreatePasswordForgetToken(string username)
+        {
+            throw new NotImplementedException();
+        }
+
         private string GetHash(string input)
         {
             SHA1 veryStrongEncryptor = new SHA1CryptoServiceProvider();
