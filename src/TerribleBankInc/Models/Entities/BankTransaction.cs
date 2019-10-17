@@ -16,6 +16,7 @@ namespace TerribleBankInc.Models.Entities
         public CurrencyTypes Currency { get; set; }
         public decimal Amount { get; set; }
         public DateTime Timestamp { get; set; }
+        public string Details { get; set; }
 
         public Client SourceClient { get; set; }
         public Client DestinationClient { get; set; }

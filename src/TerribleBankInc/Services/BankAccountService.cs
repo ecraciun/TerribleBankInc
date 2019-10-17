@@ -2,51 +2,109 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using TerribleBankInc.Models.Entities;
+using TerribleBankInc.Models.ViewModels;
+using TerribleBankInc.Repositories.Interfaces;
 using TerribleBankInc.Services.Interfaces;
 
 namespace TerribleBankInc.Services
 {
     public class BankAccountService : IBankAccountService
     {
-        public Task<BankAccount> GetById(int id)
+        private readonly IBaseRepository<BankAccount> _bankAccountRepository;
+        private readonly IMapper _mapper;
+
+        public BankAccountService(IBaseRepository<BankAccount> bankAccountRepository, IMapper mapper)
         {
-            throw new NotImplementedException();
+            _bankAccountRepository = bankAccountRepository;
+            _mapper = mapper;
         }
 
-        public Task<BankAccount> GetByAccountNumber(string accountNumber)
+        public async Task<BankAccount> GetById(int id)
         {
-            throw new NotImplementedException();
+            return await _bankAccountRepository.FindAsync(id);
         }
 
-        public Task<bool> RequestNewBankAccount(BankAccount newAccount)
+        public async Task<List<BankAccount>> GetAllAccountsForClient(int clientId)
         {
-            throw new NotImplementedException();
+            return await _bankAccountRepository.Get(x => x.ClientId == clientId);
         }
 
-        public Task<bool> ApproveAccount(int id)
+        public async Task<BankAccount> GetByAccountNumber(string accountNumber)
         {
-            throw new NotImplementedException();
+            var result = await _bankAccountRepository.Get(x => x.AccountNumber == accountNumber, $"{nameof(BankAccount.Client)}");
+            return result.FirstOrDefault();
         }
 
-        public Task<bool> DenyAccount(int id)
+        public async Task<bool> RequestNewBankAccount(NewBankAccountRequestViewModel newAccount)
         {
-            throw new NotImplementedException();
+            var account = _mapper.Map<BankAccount>(newAccount);
+            account.AccountNumber = Guid.NewGuid().ToString();
+            await _bankAccountRepository.AddAsync(account);
+            return true;
         }
 
-        public Task<bool> BlockAccount(int id)
+        public async Task<bool> ApproveAccount(int id)
         {
-            throw new NotImplementedException();
+            var account = await GetById(id);
+            if (account != null && account.Enabled == false && account.Approved == false)
+            {
+                account.Enabled = true;
+                account.Approved = true;
+                account.Balance = 100m;
+
+                await _bankAccountRepository.UpdateAsync(account);
+
+                return true;
+            }
+
+            return false;
         }
 
-        public Task<bool> EnableAccount(int id)
+        public async Task<bool> BlockAccount(int id)
         {
-            throw new NotImplementedException();
+            var account = await GetById(id);
+            if (account != null && account.Enabled)
+            {
+                account.Enabled = false;
+
+                await _bankAccountRepository.UpdateAsync(account);
+
+                return true;
+            }
+
+            return false;
         }
 
-        public Task<bool> UpdateBalance(int id, decimal delta)
+        public async Task<bool> EnableAccount(int id)
         {
-            throw new NotImplementedException();
+            var account = await GetById(id);
+            if (account != null && !account.Enabled)
+            {
+                account.Enabled = true;
+
+                await _bankAccountRepository.UpdateAsync(account);
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public async Task<bool> UpdateBalance(int id, decimal delta)
+        {
+            var account = await GetById(id);
+            if (account != null)
+            {
+                account.Balance += delta;
+
+                await _bankAccountRepository.UpdateAsync(account);
+
+                return true;
+            }
+
+            return false;
         }
     }
 }

@@ -16,6 +16,9 @@ namespace TerribleBankInc
 
             CreateMap<Client, ClientViewModel>();
             CreateMap<ClientViewModel, Client>();
+
+            CreateMap<NewBankAccountRequestViewModel, BankAccount>();
+            CreateMap<BankTransactionViewModel, BankTransaction>();
         }
     }
 }

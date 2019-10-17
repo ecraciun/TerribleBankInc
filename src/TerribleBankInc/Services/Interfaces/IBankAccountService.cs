@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using TerribleBankInc.Models.Entities;
+using TerribleBankInc.Models.ViewModels;
 
 namespace TerribleBankInc.Services.Interfaces
 {
@@ -7,11 +9,11 @@ namespace TerribleBankInc.Services.Interfaces
     {
         Task<BankAccount> GetById(int id);
         Task<BankAccount> GetByAccountNumber(string accountNumber);
-        Task<bool> RequestNewBankAccount(BankAccount newAccount);
+        Task<bool> RequestNewBankAccount(NewBankAccountRequestViewModel newAccount);
         Task<bool> ApproveAccount(int id);
-        Task<bool> DenyAccount(int id);
         Task<bool> BlockAccount(int id);
         Task<bool> EnableAccount(int id);
         Task<bool> UpdateBalance(int id, decimal delta);
+        Task<List<BankAccount>> GetAllAccountsForClient(int clientId);
     }
 }

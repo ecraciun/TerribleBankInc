@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using TerribleBankInc.Data;
 using TerribleBankInc.Models;
 using TerribleBankInc.Models.Entities;
@@ -52,6 +55,17 @@ namespace TerribleBankInc.Repositories
             }
 
             return found;
+        }
+
+        public async Task<List<T>> Get(Expression<Func<T, bool>> predicate, string includeProperties = null)
+        {
+            var query = _context.Set<T>().Where(predicate);
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                query = query.Include(includeProperties);
+            }
+
+            return await query.ToListAsync();
         }
     }
 }

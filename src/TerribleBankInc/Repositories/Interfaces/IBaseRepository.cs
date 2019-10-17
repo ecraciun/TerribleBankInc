@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using TerribleBankInc.Models.Entities;
 
@@ -11,5 +14,6 @@ namespace TerribleBankInc.Repositories.Interfaces
         Task<T> UpdateAsync(T entity);
         Task<T> AddAsync(T entity);
         Task<bool> DeleteAsync(T entity);
+        Task<List<T>> Get(Expression<Func<T, bool>> predicate, string includeProperties = null);
     }
 }
