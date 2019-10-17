@@ -8,8 +8,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TerribleBankInc.Data;
 using TerribleBankInc.Models;
+using TerribleBankInc.Models.ViewModels;
 using TerribleBankInc.Services;
-using TerribleBankInc.ViewModels;
+using TerribleBankInc.Services.Interfaces;
 
 namespace TerribleBankInc.Controllers
 {

@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using TerribleBankInc.Models;
-using TerribleBankInc.ViewModels;
+using TerribleBankInc.Models.Dtos;
+using TerribleBankInc.Models.Entities;
+using TerribleBankInc.Models.ViewModels;
 
 namespace TerribleBankInc
 {

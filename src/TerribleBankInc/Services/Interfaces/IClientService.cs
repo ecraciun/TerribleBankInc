@@ -1,8 +1,7 @@
 ﻿using System.Threading.Tasks;
-using TerribleBankInc.Models;
-using TerribleBankInc.ViewModels;
+using TerribleBankInc.Models.ViewModels;
 
-namespace TerribleBankInc.Services
+namespace TerribleBankInc.Services.Interfaces
 {
     public interface IClientService
     {

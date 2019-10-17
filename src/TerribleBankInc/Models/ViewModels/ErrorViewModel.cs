@@ -1,4 +1,4 @@
-namespace TerribleBankInc.ViewModels
+namespace TerribleBankInc.Models.ViewModels
 {
     public class ErrorViewModel
     {

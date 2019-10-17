@@ -10,6 +10,8 @@ using TerribleBankInc.Repositories;
 using TerribleBankInc.Services;
 using AutoMapper;
 using System.Reflection;
+using TerribleBankInc.Repositories.Interfaces;
+using TerribleBankInc.Services.Interfaces;
 
 namespace TerribleBankInc
 {

@@ -1,4 +1,4 @@
-﻿namespace TerribleBankInc.Models
+﻿namespace TerribleBankInc.Models.Dtos
 {
     public class ClientUser
     {

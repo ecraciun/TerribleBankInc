@@ -1,4 +1,4 @@
-namespace TerribleBankInc.Models
+namespace TerribleBankInc.Models.Enums
 {
     public enum CurrencyTypes
     {

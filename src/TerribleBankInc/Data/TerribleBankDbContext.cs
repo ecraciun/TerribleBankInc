@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TerribleBankInc.Data.EntityConfigs;
-using TerribleBankInc.Models;
+using TerribleBankInc.Models.Entities;
 
 namespace TerribleBankInc.Data
 {

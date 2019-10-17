@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace TerribleBankInc.ViewModels
+namespace TerribleBankInc.Models.ViewModels
 {
     public class RegisterViewModel
     {

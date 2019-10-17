@@ -1,22 +1,18 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+using System;
+using System.Collections.Generic;
 
-namespace TerribleBankInc.ViewModels
+namespace TerribleBankInc.Models.Entities
 {
-    public class ClientViewModel
+    public class Client : BaseEntity
     {
-        public int ID { get; set; }
-        [Required]
         public string FirstName { get; set; }
-        [Required]
         public string LastName { get; set; }
-        [Required]
         public string Address { get; set; }
-        [Required]
         public string PhoneNumber { get; set; }
-        [Required]
         public string Email { get; set; }
-        [Required]
         public DateTime DateOfBirth { get; set; }
+
+        public User User { get; set; }
+        public List<BankAccount> BankAccounts { get; set; }
     }
 }

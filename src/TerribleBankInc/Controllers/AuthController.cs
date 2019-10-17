@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using TerribleBankInc.Services;
-using TerribleBankInc.ViewModels;
 using Microsoft.AspNetCore.Authentication;
-using IAuthenticationService=TerribleBankInc.Services.IAuthenticationService;
+using TerribleBankInc.Models.ViewModels;
+using IAuthenticationService=TerribleBankInc.Services.Interfaces.IAuthenticationService;
 
 namespace TerribleBankInc.Controllers
 {

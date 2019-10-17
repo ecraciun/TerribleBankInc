@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using TerribleBankInc.Models;
+using TerribleBankInc.Models.Entities;
 
-namespace TerribleBankInc.Repositories
+namespace TerribleBankInc.Repositories.Interfaces
 {
     public interface IBaseRepository<T> where T: BaseEntity
     {

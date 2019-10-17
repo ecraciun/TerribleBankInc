@@ -3,6 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using TerribleBankInc.Data;
 using TerribleBankInc.Models;
+using TerribleBankInc.Models.Entities;
+using TerribleBankInc.Repositories.Interfaces;
 
 namespace TerribleBankInc.Repositories
 {

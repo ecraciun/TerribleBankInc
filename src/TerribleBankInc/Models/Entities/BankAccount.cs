@@ -1,6 +1,7 @@
 using System.Collections.Generic;
+using TerribleBankInc.Models.Enums;
 
-namespace TerribleBankInc.Models
+namespace TerribleBankInc.Models.Entities
 {
     public class BankAccount : BaseEntity
     {

@@ -1,4 +1,6 @@
-﻿namespace TerribleBankInc.Models
+﻿using TerribleBankInc.Models.Dtos;
+
+namespace TerribleBankInc.Models.OperationResults
 {
     public class LoginResult : OperationResult
     {
