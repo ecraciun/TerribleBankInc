@@ -12,8 +12,11 @@ namespace TerribleBankInc.Services.Interfaces
         Task<bool> RequestNewBankAccount(NewBankAccountRequestViewModel newAccount);
         Task<bool> ApproveAccount(int id);
         Task<bool> BlockAccount(int id);
+        Task<bool> RejectAccount(int id, string reason);
         Task<bool> EnableAccount(int id);
         Task<bool> UpdateBalance(int id, decimal delta);
         Task<List<BankAccount>> GetAllAccountsForClient(int clientId);
+        Task<List<BankAccount>> GetDisabledAccounts();
+        Task<List<BankAccount>> GetPendingAccounts();
     }
 }

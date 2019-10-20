@@ -3,6 +3,16 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Data\Migrations\20191020094110_FKCascade.cs" />
+    <Compile Remove="Data\Migrations\20191020094110_FKCascade.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191020094205_FKCascade2.cs" />
+    <Compile Remove="Data\Migrations\20191020094205_FKCascade2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191020095604_FKCascade.cs" />
+    <Compile Remove="Data\Migrations\20191020095604_FKCascade.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191020100010_FKCascade.cs" />
+    <Compile Remove="Data\Migrations\20191020100010_FKCascade.Designer.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="wwwroot\.well-known\security.txt" />
   </ItemGroup>
   <ItemGroup>

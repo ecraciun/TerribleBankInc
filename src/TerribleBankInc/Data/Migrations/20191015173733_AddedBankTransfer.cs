@@ -38,19 +38,19 @@ namespace TerribleBankInc.Data.Migrations
                         column: x => x.DestinationClientId,
                         principalTable: "Clients",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Transactions_BankAccounts_SourceAccountId",
                         column: x => x.SourceAccountId,
                         principalTable: "BankAccounts",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Transactions_Clients_SourceClientId",
                         column: x => x.SourceClientId,
                         principalTable: "Clients",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(

@@ -1,0 +1,74 @@
+﻿@model IEnumerable<TerribleBankInc.Models.Entities.BankTransaction>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SourceClientEmail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SourceAccountNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DestinationClientEmail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DestinationAccountNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Currency)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Amount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Details)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Timestamp)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Approved)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Reason)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.SourceClientEmail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SourceAccountNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DestinationClientEmail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DestinationAccountNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Currency)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Amount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Details)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Timestamp)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Approved)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Reason)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

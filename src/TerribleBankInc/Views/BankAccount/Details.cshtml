@@ -1,0 +1,50 @@
+﻿@model TerribleBankInc.Models.Entities.BankAccount
+
+<div>
+    <h4>Account details</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Currency)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Currency)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.AccountNumber)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AccountNumber)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Balance)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Balance)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Enabled)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Enabled)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Approved)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Approved)
+        </dd>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Reason)
+        </dd>
+    </dl>
+</div>
+<div>
+    @if (Model.Approved.HasValue && Model.Approved.Value)
+    {
+        @Html.ActionLink("See transactions", "GetTransactions", "Transfer", new { id = Model.ID }) 
+        <br />
+    }
+
+    <a asp-action="Index">Back to List</a>
+</div>

@@ -1,0 +1,5 @@
+﻿@model IEnumerable<TerribleBankInc.Models.Entities.BankAccount>
+
+<h2>Disabled accounts</h2>
+
+@await Html.PartialAsync("_AccountsList", Model)

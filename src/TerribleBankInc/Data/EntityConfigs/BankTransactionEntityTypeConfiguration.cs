@@ -14,8 +14,8 @@ namespace TerribleBankInc.Data.EntityConfigs
                 .HasColumnType("decimal(18,2)");
             builder.Property(x => x.DestinationClientEmail).IsRequired();
 
-            builder.HasOne(x => x.SourceBankAccount).WithMany(x => x.OutgoingTransactions).HasForeignKey(x => x.SourceAccountId);
-            builder.HasOne(x => x.DestinationBankAccount).WithMany(x => x.IncomingTransactions).HasForeignKey(x => x.DestinationAccountId);
+            builder.HasOne(x => x.SourceAccount).WithMany(x => x.OutgoingTransactions).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(x => x.DestinationAccount).WithMany(x => x.IncomingTransactions).OnDelete(DeleteBehavior.Restrict);
             builder.HasOne(x => x.SourceClient);
             builder.HasOne(x => x.DestinationClient);
         }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TerribleBankInc.Data;
 
 namespace TerribleBankInc.Data.Migrations
 {
     [DbContext(typeof(TerribleBankDbContext))]
-    partial class TerribleBankDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191020093408_UpdatedEntities2")]
+    partial class UpdatedEntities2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -201,9 +203,7 @@ namespace TerribleBankInc.Data.Migrations
                 {
                     b.HasOne("TerribleBankInc.Models.Entities.BankAccount", "DestinationAccount")
                         .WithMany("IncomingTransactions")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .HasForeignKey("DestinationAccountId")
-                        .IsRequired();
+                        .HasForeignKey("DestinationAccountId");
 
                     b.HasOne("TerribleBankInc.Models.Entities.Client", "DestinationClient")
                         .WithMany()
@@ -214,7 +214,7 @@ namespace TerribleBankInc.Data.Migrations
                     b.HasOne("TerribleBankInc.Models.Entities.BankAccount", "SourceAccount")
                         .WithMany("OutgoingTransactions")
                         .HasForeignKey("SourceAccountId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TerribleBankInc.Models.Entities.Client", "SourceClient")

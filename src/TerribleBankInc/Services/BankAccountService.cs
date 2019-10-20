@@ -23,12 +23,23 @@ namespace TerribleBankInc.Services
 
         public async Task<BankAccount> GetById(int id)
         {
-            return await _bankAccountRepository.FindAsync(id);
+            return (await _bankAccountRepository.Get(x => x.ID == id, $"{nameof(BankAccount.Client)}")).FirstOrDefault();
         }
 
         public async Task<List<BankAccount>> GetAllAccountsForClient(int clientId)
         {
             return await _bankAccountRepository.Get(x => x.ClientId == clientId);
+        }
+
+        public async Task<List<BankAccount>> GetDisabledAccounts()
+        {
+            return await _bankAccountRepository.Get(x =>
+                x.Enabled == false && x.Approved.HasValue && x.Approved.Value, $"{nameof(BankAccount.Client)}");
+        }
+
+        public async Task<List<BankAccount>> GetPendingAccounts()
+        {
+            return await _bankAccountRepository.Get(x => x.Enabled == false && !x.Approved.HasValue, $"{nameof(BankAccount.Client)}");
         }
 
         public async Task<BankAccount> GetByAccountNumber(string accountNumber)
@@ -41,6 +52,7 @@ namespace TerribleBankInc.Services
         {
             var account = _mapper.Map<BankAccount>(newAccount);
             account.AccountNumber = Guid.NewGuid().ToString();
+            account.Approved = null;
             await _bankAccountRepository.AddAsync(account);
             return true;
         }
@@ -53,6 +65,22 @@ namespace TerribleBankInc.Services
                 account.Enabled = true;
                 account.Approved = true;
                 account.Balance = 100m;
+
+                await _bankAccountRepository.UpdateAsync(account);
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public async Task<bool> RejectAccount(int id, string reason)
+        {
+            var account = await GetById(id);
+            if (account != null && account.Enabled == false && account.Approved.HasValue == false)
+            {
+                account.Approved = false;
+                account.Reason = reason;
 
                 await _bankAccountRepository.UpdateAsync(account);
 

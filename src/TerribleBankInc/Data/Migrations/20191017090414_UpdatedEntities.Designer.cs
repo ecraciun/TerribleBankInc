@@ -189,7 +189,7 @@ namespace TerribleBankInc.Data.Migrations
 
             modelBuilder.Entity("TerribleBankInc.Models.Entities.BankTransaction", b =>
                 {
-                    b.HasOne("TerribleBankInc.Models.Entities.BankAccount", "DestinationBankAccount")
+                    b.HasOne("TerribleBankInc.Models.Entities.BankAccount", "DestinationAccount")
                         .WithMany("IncomingTransactions")
                         .HasForeignKey("DestinationAccountId");
 
@@ -199,7 +199,7 @@ namespace TerribleBankInc.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TerribleBankInc.Models.Entities.BankAccount", "SourceBankAccount")
+                    b.HasOne("TerribleBankInc.Models.Entities.BankAccount", "SourceAccount")
                         .WithMany("OutgoingTransactions")
                         .HasForeignKey("SourceAccountId")
                         .OnDelete(DeleteBehavior.Cascade)

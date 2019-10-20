@@ -1,0 +1,20 @@
+﻿@model TerribleBankInc.Models.ViewModels.ClientBankAccountsViewModel
+
+@{
+    ViewData["Title"] = "Bank accounts";
+}
+
+<h1>Bank accounts</h1>
+
+<p>
+    <a asp-action="RequestNew">Request New</a>
+</p>
+
+<h2>Active accounts</h2>
+@await Html.PartialAsync("_AccountsList", Model.ActiveAccounts)
+
+<h2>Disabled accounts</h2>
+@await Html.PartialAsync("_AccountsList", Model.DisabledAccounts)
+
+<h2>Pending accounts</h2>
+@await Html.PartialAsync("_AccountsList", Model.PendingAccounts)

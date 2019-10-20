@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using TerribleBankInc.Models.Entities;
@@ -49,6 +50,12 @@ namespace TerribleBankInc.Services
             await _bankAccountService.UpdateBalance(destinationAccount.ID, transactionViewModel.Amount);
 
             return true;
+        }
+
+        public async Task<List<BankTransaction>> GetAllForAccount(int accountId)
+        {
+            return await _bankTransactionRepository.Get(x =>
+                x.SourceAccountId == accountId && x.DestinationAccountId == accountId);
         }
     }
 }

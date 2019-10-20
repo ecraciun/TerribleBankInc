@@ -34,3 +34,6 @@ Should be way more than enough.
 - [ ] transfers: send to, history with search
 
 I believe this should suffice for now.
+
+
+Improper access control: https://www.engadget.com/2019/10/19/mercedes-app-leaked-car-owners-data/
