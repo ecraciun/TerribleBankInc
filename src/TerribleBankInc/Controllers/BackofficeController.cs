@@ -1,10 +1,13 @@
 ﻿using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TerribleBankInc.Helpers;
 using TerribleBankInc.Services.Interfaces;
 
 namespace TerribleBankInc.Controllers
 {
+    [Authorize(Roles = Constants.AdminRole)]
     public class BackofficeController : Controller
     {
         private readonly IMapper _mapper;

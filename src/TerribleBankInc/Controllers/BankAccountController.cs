@@ -1,12 +1,14 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TerribleBankInc.Models.ViewModels;
 using TerribleBankInc.Services.Interfaces;
 
 namespace TerribleBankInc.Controllers
 {
+    [Authorize]
     public class BankAccountController : Controller
     {
         private readonly IMapper _mapper;

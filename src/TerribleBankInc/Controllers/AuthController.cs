@@ -1,8 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using TerribleBankInc.Models.ViewModels;
 using IAuthenticationService=TerribleBankInc.Services.Interfaces.IAuthenticationService;
+using TerribleBankInc.Helpers;
 
 namespace TerribleBankInc.Controllers
 {
@@ -30,6 +33,19 @@ namespace TerribleBankInc.Controllers
                 if (loginResult.IsSuccess)
                 {
                     //TODO: handle auth
+
+                    var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
+                    identity.AddClaim(new Claim(ClaimTypes.Name, loginResult.ClientUser.ClientId.ToString()));
+                    identity.AddClaim(new Claim(ClaimTypes.GivenName, loginResult.ClientUser.FirstName));
+                    identity.AddClaim(new Claim(ClaimTypes.Surname, loginResult.ClientUser.LastName));
+                    if (loginResult.ClientUser.IsAdmin)
+                    {
+                        identity.AddClaim(new Claim(ClaimTypes.Role, Constants.AdminRole));
+                    }
+
+                    var principal = new ClaimsPrincipal(identity);
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
                     return RedirectToAction(nameof(HomeController.Index), "Home");
                 }
                 else
@@ -39,19 +55,6 @@ namespace TerribleBankInc.Controllers
             }
 
             return View(loginViewModel);
-
-            //var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
-            //identity.AddClaim(new Claim(ClaimTypes.Name, user.Ssn));
-            //identity.AddClaim(new Claim(ClaimTypes.GivenName, user.FirstName));
-            //identity.AddClaim(new Claim(ClaimTypes.Surname, user.LastName));
-
-            //foreach (var role in user.Roles)
-            //{
-            //    identity.AddClaim(new Claim(ClaimTypes.Role, role.Role));
-            //}
-
-            //var principal = new ClaimsPrincipal(identity);
-            //await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
         }
 
         [HttpGet]
@@ -80,6 +83,7 @@ namespace TerribleBankInc.Controllers
             return View(registerViewModel);
         }
 
+        [HttpGet]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();

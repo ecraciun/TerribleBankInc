@@ -32,7 +32,13 @@ namespace TerribleBankInc
             services.AddDbContext<TerribleBankDbContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+                {
+                    options.AccessDeniedPath = "/Auth/AccessDenied";
+                    options.LoginPath = "/Auth/Login";
+                    options.LogoutPath = "/Auth/Logout";
+                    options.ClaimsIssuer = "TerribleBankInc";
+                });
             services.AddHttpContextAccessor();
             services.AddControllersWithViews();
 
@@ -54,6 +60,7 @@ namespace TerribleBankInc
             }
 
             app.UseAuthentication();
+            app.UseAuthorization();
 
             if (env.IsDevelopment())
             {
@@ -70,8 +77,6 @@ namespace TerribleBankInc
             app.UseStaticFiles();
 
             app.UseRouting();
-
-            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

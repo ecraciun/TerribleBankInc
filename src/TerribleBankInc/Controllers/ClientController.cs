@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using TerribleBankInc.Data;
-using TerribleBankInc.Models;
+using TerribleBankInc.Helpers;
 using TerribleBankInc.Models.ViewModels;
-using TerribleBankInc.Services;
 using TerribleBankInc.Services.Interfaces;
 
 namespace TerribleBankInc.Controllers
 {
+    [Authorize(Roles = Constants.AdminRole)]
     public class ClientController : Controller
     {
         private readonly IClientService _clientService;
