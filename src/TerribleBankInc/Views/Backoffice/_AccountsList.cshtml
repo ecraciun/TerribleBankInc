@@ -25,7 +25,6 @@
             @Html.DisplayNameFor(model => model.Reason)
         </th>
         <th></th>
-        <th></th>
     </tr>
     </thead>
     <tbody>
@@ -53,15 +52,7 @@
             @Html.DisplayFor(modelItem => item.Reason)
         </td>
         <td>
-            @Html.ActionLink("Details", "Details", new {id = item.ID})
-        </td>
-        <td>
-            @{
-                if (item.Approved.HasValue && item.Approved.Value && item.Enabled)
-                {
-                    @Html.ActionLink("Block", "BlockAccount", new {id = item.ID})
-                }
-            }
+            @Html.ActionLink("Details", "ReviewAccount", new {accountId = item.ID})
         </td>
     </tr>
 }

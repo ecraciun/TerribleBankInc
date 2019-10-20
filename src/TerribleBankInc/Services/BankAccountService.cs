@@ -60,7 +60,7 @@ namespace TerribleBankInc.Services
         public async Task<bool> ApproveAccount(int id)
         {
             var account = await GetById(id);
-            if (account != null && account.Enabled == false && account.Approved == false)
+            if (account != null && account.Enabled == false && account.Approved.HasValue == false)
             {
                 account.Enabled = true;
                 account.Approved = true;

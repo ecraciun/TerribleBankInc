@@ -21,6 +21,7 @@ namespace TerribleBankInc.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(int clientId)
         {
+            //TODO: remove hardcoding
             var accounts = await _bankAccountService.GetAllAccountsForClient(clientId);
             var vm = new ClientBankAccountsViewModel
             {
@@ -46,7 +47,8 @@ namespace TerribleBankInc.Controllers
         [HttpGet]
         public async Task<IActionResult> RequestNew()
         {
-            return View();
+            //TODO: remove hardcoding
+            return View(new NewBankAccountRequestViewModel{ ClientId = 1});
         }
 
         [HttpPost]
@@ -73,9 +75,9 @@ namespace TerribleBankInc.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> BlockAccountConfirm([FromBody]int id)
+        public async Task<IActionResult> BlockAccountConfirm(int ID)
         {
-            var result = await _bankAccountService.BlockAccount(id);
+            var result = await _bankAccountService.BlockAccount(ID);
             return RedirectToAction(nameof(Index));
         }
     }

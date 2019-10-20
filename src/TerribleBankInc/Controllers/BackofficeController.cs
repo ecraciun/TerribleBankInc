@@ -45,25 +45,25 @@ namespace TerribleBankInc.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ApproveAccount([FromBody] int accountId)
+        public async Task<IActionResult> ApproveAccount(int ID)
         {
-            var result = await _bankAccountService.ApproveAccount(accountId);
+            var result = await _bankAccountService.ApproveAccount(ID);
 
             return RedirectToAction(nameof(GetAccountRequests));
         }
 
         [HttpPost]
-        public async Task<IActionResult> RejectAccount([FromBody] int accountId, [FromBody] string reason)
+        public async Task<IActionResult> RejectAccount(int ID, [FromBody] string Reason)
         {
-            var result = await _bankAccountService.RejectAccount(accountId, reason);
+            var result = await _bankAccountService.RejectAccount(ID, Reason);
 
             return RedirectToAction(nameof(GetAccountRequests));
         }
 
         [HttpPost]
-        public async Task<IActionResult> EnableAccount([FromBody] int accountId)
+        public async Task<IActionResult> EnableAccount(int ID)
         {
-            var result = await _bankAccountService.EnableAccount(accountId);
+            var result = await _bankAccountService.EnableAccount(ID);
 
             return RedirectToAction(nameof(GetBlockedAccounts));
         }

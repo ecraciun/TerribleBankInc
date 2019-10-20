@@ -1,4 +1,5 @@
-﻿@model TerribleBankInc.Models.ViewModels.NewBankAccountRequestViewModel
+﻿@using TerribleBankInc.Models.Enums
+@model TerribleBankInc.Models.ViewModels.NewBankAccountRequestViewModel
 
 <h4>NewBankAccountRequestViewModel</h4>
 <hr />
@@ -7,8 +8,12 @@
         <form asp-action="RequestNew">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
+                @Html.HiddenFor(model => model.ClientId)
                 <label asp-for="Currency" class="control-label"></label>
-                <input asp-for="Currency" class="form-control" />
+                <select asp-for="Currency" asp-items="Html.GetEnumSelectList<CurrencyTypes>()">
+                    <option selected="selected" value="">Please select</option>
+                </select>
+
                 <span asp-validation-for="Currency" class="text-danger"></span>
             </div>
             <div class="form-group">

@@ -37,9 +37,9 @@
         </dd>
     </dl>
     
-    <form asp-action="BlockAccountConfirm">
+    <form asp-action="BlockAccountConfirm" asp-route-ID="@Model.ID">
         @Html.HiddenFor(model => model.ID)
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <input type="submit" value="Disable" class="btn btn-danger" /> |
         <a asp-action="Index">Back to List</a>
     </form>
 </div>
