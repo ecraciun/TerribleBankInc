@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using TerribleBankInc.Models.Enums;
 
 namespace TerribleBankInc.Models.ViewModels
@@ -19,5 +21,7 @@ namespace TerribleBankInc.Models.ViewModels
         public CurrencyTypes Currency { get; set; }
         [Required]
         public decimal Amount { get; set; }
+
+        public List<SelectListItem> ActiveAccounts { get; set; }
     }
 }
