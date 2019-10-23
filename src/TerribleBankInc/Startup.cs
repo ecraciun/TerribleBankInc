@@ -17,6 +17,8 @@ namespace TerribleBankInc
 {
     public class Startup
     {
+        public const string TerribleCookieSchemeName = "TerribleIncScheme";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -32,7 +34,10 @@ namespace TerribleBankInc
             services.AddDbContext<TerribleBankDbContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+            services.AddMvc();
+
+            services.AddAuthentication(TerribleCookieSchemeName)
+                .AddCookie(TerribleCookieSchemeName, options =>
                 {
                     options.AccessDeniedPath = "/Auth/AccessDenied";
                     options.LoginPath = "/Auth/Login";
@@ -40,7 +45,7 @@ namespace TerribleBankInc
                     options.ClaimsIssuer = "TerribleBankInc";
                 });
             services.AddHttpContextAccessor();
-            services.AddControllersWithViews();
+            //services.AddControllersWithViews();
 
             services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             services.AddScoped<IAuthenticationService, AuthenticationService>();
@@ -59,6 +64,10 @@ namespace TerribleBankInc
                 context?.Database.Migrate();
             }
 
+            app.UseStaticFiles();
+
+            app.UseRouting();
+
             app.UseAuthentication();
             app.UseAuthorization();
 
@@ -74,9 +83,7 @@ namespace TerribleBankInc
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
-
-            app.UseRouting();
+            
 
             app.UseEndpoints(endpoints =>
             {

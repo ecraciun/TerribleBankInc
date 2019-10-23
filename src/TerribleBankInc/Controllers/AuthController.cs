@@ -34,17 +34,14 @@ namespace TerribleBankInc.Controllers
                 {
                     //TODO: handle auth
 
-                    var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
+                    var identity = new ClaimsIdentity("Cookie");
                     identity.AddClaim(new Claim(ClaimTypes.Name, loginResult.ClientUser.ClientId.ToString()));
                     identity.AddClaim(new Claim(ClaimTypes.GivenName, loginResult.ClientUser.FirstName));
                     identity.AddClaim(new Claim(ClaimTypes.Surname, loginResult.ClientUser.LastName));
-                    if (loginResult.ClientUser.IsAdmin)
-                    {
-                        identity.AddClaim(new Claim(ClaimTypes.Role, Constants.AdminRole));
-                    }
+                    identity.AddClaim(new Claim(ClaimTypes.Role, loginResult.ClientUser.IsAdmin ? Constants.AdminRole : Constants.MemberRole));
 
                     var principal = new ClaimsPrincipal(identity);
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+                    await HttpContext.SignInAsync(principal);
 
                     return RedirectToAction(nameof(HomeController.Index), "Home");
                 }
