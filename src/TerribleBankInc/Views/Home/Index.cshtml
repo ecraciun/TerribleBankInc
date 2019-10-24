@@ -4,38 +4,5 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
-@{
-    if (this.Context.User.Identity.IsAuthenticated)
-    {
-        <div class="text-center">
-            <a asp-action="Logout" asp-controller="Auth">Logout</a>
-        </div>
-    }
-    else
-    {
-        <div class="text-center">
-            <a asp-action="Login" asp-controller="Auth">Login</a>
-            <a asp-action="Register" asp-controller="Auth">Register</a>
-        </div>
-    }
-}
-
-<div class="text-center">
-    <a asp-action="Details" asp-controller="Client" asp-route-id="1">View profile</a>
-    <a asp-action="Edit" asp-controller="Client" asp-route-id="1">Edit profile</a>
-</div>
-
-<div class="text-center">
-    <a asp-action="Index" asp-controller="BankAccount" asp-route-id="1">View accounts</a>
-</div>
-
-<div class="text-center">
-    <a asp-action="CreateTransfer" asp-controller="Transfer">Send money</a>
-</div>
-
-<div class="text-center">
-    <a asp-action="GetAccountRequests" asp-controller="Backoffice" asp-route-id="1">View account requests</a>
-    <a asp-action="GetBlockedAccounts" asp-controller="Backoffice" asp-route-id="1">View disabled accounts</a>
+    <p>Give us your money and we promise you we'll keep it so safe that even you won't get to have them back ever again.</p>
 </div>

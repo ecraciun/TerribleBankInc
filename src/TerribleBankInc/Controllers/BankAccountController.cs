@@ -9,7 +9,7 @@ using TerribleBankInc.Services.Interfaces;
 namespace TerribleBankInc.Controllers
 {
     [Authorize]
-    public class BankAccountController : Controller
+    public class BankAccountController : BaseController
     {
         private readonly IMapper _mapper;
         private readonly IBankAccountService _bankAccountService;
@@ -21,9 +21,9 @@ namespace TerribleBankInc.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(int clientId)
+        public async Task<IActionResult> Index()
         {
-            //TODO: remove hardcoding
+            var clientId = GetCurrentUserId();
             var accounts = await _bankAccountService.GetAllAccountsForClient(clientId);
             var vm = new ClientBankAccountsViewModel
             {
@@ -49,8 +49,8 @@ namespace TerribleBankInc.Controllers
         [HttpGet]
         public async Task<IActionResult> RequestNew()
         {
-            //TODO: remove hardcoding
-            return View(new NewBankAccountRequestViewModel{ ClientId = 1});
+            var clientId = GetCurrentUserId();
+            return View(new NewBankAccountRequestViewModel{ ClientId = clientId});
         }
 
         [HttpPost]

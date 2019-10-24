@@ -13,7 +13,7 @@ using TerribleBankInc.Services.Interfaces;
 namespace TerribleBankInc.Controllers
 {
     [Authorize]
-    public class TransferController : Controller
+    public class TransferController : BaseController
     {
         private readonly IMapper _mapper;
         private readonly IBankTransferService _bankTransferService;
@@ -37,8 +37,8 @@ namespace TerribleBankInc.Controllers
         [HttpGet]
         public async Task<IActionResult> CreateTransfer()
         {
-            //TODO: remove hardcoding
-            var activeAccounts = (await _bankAccountService.GetAllAccountsForClient(1))
+            var clientId = GetCurrentUserId();
+            var activeAccounts = (await _bankAccountService.GetAllAccountsForClient(clientId))
                 .Where(x => x.Enabled && x.Approved.HasValue && x.Approved.Value).ToList();
 
             var vm = new BankTransactionViewModel

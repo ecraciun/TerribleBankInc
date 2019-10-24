@@ -8,7 +8,7 @@ using TerribleBankInc.Services.Interfaces;
 namespace TerribleBankInc.Controllers
 {
     [Authorize(Roles = Constants.AdminRole)]
-    public class BackofficeController : Controller
+    public class BackofficeController : BaseController
     {
         private readonly IMapper _mapper;
         private readonly IBankAccountService _bankAccountService;
@@ -19,6 +19,12 @@ namespace TerribleBankInc.Controllers
             _mapper = mapper;
             _bankAccountService = bankAccountService;
             _clientService = clientService;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            return View();
         }
 
         [HttpGet]

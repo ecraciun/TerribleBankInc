@@ -2,10 +2,11 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using TerribleBankInc.Models.ViewModels;
 using IAuthenticationService=TerribleBankInc.Services.Interfaces.IAuthenticationService;
 using TerribleBankInc.Helpers;
+using TerribleBankInc.Models.Dtos;
+using TerribleBankInc.Models.OperationResults;
 
 namespace TerribleBankInc.Controllers
 {
@@ -32,17 +33,7 @@ namespace TerribleBankInc.Controllers
                 var loginResult = await _authenticationService.LoginAsync(loginViewModel.Username, loginViewModel.Password);
                 if (loginResult.IsSuccess)
                 {
-                    //TODO: handle auth
-
-                    var identity = new ClaimsIdentity("Cookie");
-                    identity.AddClaim(new Claim(ClaimTypes.Name, loginResult.ClientUser.ClientId.ToString()));
-                    identity.AddClaim(new Claim(ClaimTypes.GivenName, loginResult.ClientUser.FirstName));
-                    identity.AddClaim(new Claim(ClaimTypes.Surname, loginResult.ClientUser.LastName));
-                    identity.AddClaim(new Claim(ClaimTypes.Role, loginResult.ClientUser.IsAdmin ? Constants.AdminRole : Constants.MemberRole));
-
-                    var principal = new ClaimsPrincipal(identity);
-                    await HttpContext.SignInAsync(principal);
-
+                    await HandleLogin(loginResult.ClientUser);
                     return RedirectToAction(nameof(HomeController.Index), "Home");
                 }
                 else
@@ -68,7 +59,7 @@ namespace TerribleBankInc.Controllers
                 var result = await _authenticationService.RegisterAsync(registerViewModel);
                 if (result.IsSuccess)
                 {
-                    //TODO: handle auth
+                    await HandleLogin(result.ClientUser);
                     return RedirectToAction(nameof(HomeController.Index), "Home");
                 }
                 else
@@ -91,6 +82,35 @@ namespace TerribleBankInc.Controllers
         public IActionResult AccessDenied()
         {
             return View();
+        }
+
+        [HttpGet]
+        public IActionResult Forgot()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Forgot(ForgotPasswordViewModel forgotPasswordViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                //TODO: implement it
+            }
+
+            return View(forgotPasswordViewModel);
+        }
+
+        private async Task HandleLogin(ClientUser user)
+        {
+            var identity = new ClaimsIdentity("Cookie");
+            identity.AddClaim(new Claim(ClaimTypes.Name, user.ClientId.ToString()));
+            identity.AddClaim(new Claim(ClaimTypes.GivenName, user.FirstName));
+            identity.AddClaim(new Claim(ClaimTypes.Surname, user.LastName));
+            identity.AddClaim(new Claim(ClaimTypes.Role, user.IsAdmin ? Constants.AdminRole : Constants.MemberRole));
+
+            var principal = new ClaimsPrincipal(identity);
+            await HttpContext.SignInAsync(principal);
         }
     }
 }
