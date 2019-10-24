@@ -17,6 +17,8 @@ namespace TerribleBankInc.Services
 {
     public class AuthenticationService : IAuthenticationService
     {
+        private const int ForgotTokenLifeInMinutes = 5;
+
         private readonly IBaseRepository<Client> _clientRepository;
         private readonly IBaseRepository<User> _userRepository;
         private readonly IMapper _mapper;
@@ -30,7 +32,7 @@ namespace TerribleBankInc.Services
 
         public async Task<LoginResult> LoginAsync(string username, string password)
         {
-            var user = _userRepository.GetAll().FirstOrDefault(x => x.Username == username);
+            var user = (await _userRepository.Get(x => x.Username == username, nameof(User.Client))).FirstOrDefault();
             if (user == null)
             {
                 return new LoginResult
@@ -50,12 +52,9 @@ namespace TerribleBankInc.Services
                 };
             }
 
-            // Yes yes, .Include would have done the trick in EF
-            var client = await _clientRepository.FindAsync(user.ClientId);
-
             return new LoginResult
             {
-                ClientUser = _mapper.Map<ClientUser>(client),
+                ClientUser = _mapper.Map<ClientUser>(user.Client),
                 IsSuccess = true
             };
         }
@@ -93,9 +92,61 @@ namespace TerribleBankInc.Services
             };
         }
 
-        public Task<bool> CreatePasswordForgetToken(string username)
+        public async Task<ForgotPasswordResult> CreatePasswordForgetToken(string username)
         {
-            throw new NotImplementedException();
+            var user = (await _userRepository.Get(x => x.Username == username)).FirstOrDefault();
+            if (user == null)
+            {
+                return new ForgotPasswordResult
+                {
+                    IsSuccess = false,
+                    Message = "No user registered with provided email."
+                };
+            }
+
+            user.ForgotPasswordToken = Guid.NewGuid().ToString();
+            user.ForgotPasswordExpiration = DateTime.UtcNow.AddMinutes(ForgotTokenLifeInMinutes);
+            await _userRepository.UpdateAsync(user);
+
+            return new ForgotPasswordResult
+            {
+                IsSuccess = true,
+                ForgotPasswordExpiration = user.ForgotPasswordExpiration.Value,
+                ForgotPasswordToken = user.ForgotPasswordToken
+            };
+        }
+
+        public async Task<bool> IsForgotPasswordTokenValid(string token)
+        {
+            var user = (await _userRepository.Get(x => x.ForgotPasswordToken == token)).FirstOrDefault();
+            if (user == null) return false;
+
+            if (DateTime.UtcNow > user.ForgotPasswordExpiration.Value) return false;
+
+            return true;
+        }
+
+        public async Task<OperationResult> ResetPasswordWithToken(string token, string newPassword)
+        {
+            var user = (await _userRepository.Get(x => x.ForgotPasswordToken == token)).FirstOrDefault();
+            if (user == null || user.ForgotPasswordExpiration.Value < DateTime.UtcNow)
+            {
+                return new OperationResult
+                {
+                    IsSuccess = false,
+                    Message = "Invalid token"
+                };
+            }
+
+            user.HashedPassword = GetHash(newPassword);
+            user.ForgotPasswordExpiration = null;
+            user.ForgotPasswordToken = null;
+            await _userRepository.UpdateAsync(user);
+
+            return new OperationResult
+            {
+                IsSuccess = true
+            };
         }
 
         private string GetHash(string input)

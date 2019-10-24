@@ -95,10 +95,52 @@ namespace TerribleBankInc.Controllers
         {
             if (ModelState.IsValid)
             {
-                //TODO: implement it
+                var result = await _authenticationService.CreatePasswordForgetToken(forgotPasswordViewModel.Email);
+                if (result.IsSuccess)
+                {
+                    return RedirectToAction(nameof(ResetPassword), new
+                    {
+                        token = result.ForgotPasswordToken
+                    });
+                }
+                else
+                {
+                    ModelState.AddModelError("", result.Message);
+                }
             }
 
             return View(forgotPasswordViewModel);
+        }
+
+        [HttpGet("[controller]/[action]/{token}")]
+        public async Task<IActionResult> ResetPassword(string token)
+        {
+            if (string.IsNullOrEmpty(token) || !(await _authenticationService.IsForgotPasswordTokenValid(token)))
+            {
+                return BadRequest();
+            }
+
+            return View(new ResetPasswordViewModel{Token = token});
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel resetPasswordViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _authenticationService.ResetPasswordWithToken(resetPasswordViewModel.Token,
+                    resetPasswordViewModel.Password);
+                if (result.IsSuccess)
+                {
+                    return RedirectToAction(nameof(Login));
+                }
+                else
+                {
+                    ModelState.AddModelError("", result.Message);
+                }
+            }
+
+            return View(resetPasswordViewModel);
         }
 
         private async Task HandleLogin(ClientUser user)

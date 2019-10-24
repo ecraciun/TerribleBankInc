@@ -28,9 +28,9 @@ Demo for security basics talks
 Should be way more than enough.
 
 ## Functionals features I'm thinking of including
-- [ ] login / register / logout / forgot password / change password
+- [x] login / register / logout / forgot password / change password
 - [x] view/edit profile info
-- [ ] view & manage accounts: list, create, delete
+- [x] view & manage accounts: list, create, block
 - [ ] transfers: send to, history with search
 
 I believe this should suffice for now.
