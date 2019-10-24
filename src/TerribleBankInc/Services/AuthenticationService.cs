@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -22,12 +23,14 @@ namespace TerribleBankInc.Services
         private readonly IBaseRepository<Client> _clientRepository;
         private readonly IBaseRepository<User> _userRepository;
         private readonly IMapper _mapper;
+        private readonly IHashingService _hashingService;
 
-        public AuthenticationService(IBaseRepository<Client> clientRepository, IBaseRepository<User> userRepository, IMapper mapper)
+        public AuthenticationService(IBaseRepository<Client> clientRepository, IBaseRepository<User> userRepository, IMapper mapper, IHashingService hashingService)
         {
             _clientRepository = clientRepository;
             _userRepository = userRepository;
             _mapper = mapper;
+            _hashingService = hashingService;
         }
 
         public async Task<LoginResult> LoginAsync(string username, string password)
@@ -42,7 +45,13 @@ namespace TerribleBankInc.Services
                 };
             }
 
-            var hash = GetHash(password);
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            var hash = _hashingService.GetHash(password);
+            sw.Stop();
+
+            Debug.WriteLine($"\n\n\nHASHING TIME: {sw.ElapsedMilliseconds}");
+
             if (!hash.Equals(user.HashedPassword))
             {
                 return new LoginResult
@@ -62,9 +71,9 @@ namespace TerribleBankInc.Services
         public async Task<bool> ChangePasswordAsync(int userId, string oldPassword, string newPassword)
         {
             var user = await _userRepository.FindAsync(userId);
-            if(user != null && user.HashedPassword.Equals(GetHash(oldPassword)))
+            if(user != null && user.HashedPassword.Equals(_hashingService.GetHash(oldPassword)))
             {
-                user.HashedPassword = GetHash(newPassword);
+                user.HashedPassword = _hashingService.GetHash(newPassword);
                 await _userRepository.UpdateAsync(user);
                 return true;
             }
@@ -80,7 +89,7 @@ namespace TerribleBankInc.Services
             {
                 ClientId = client.ID,
                 Username = client.Email,
-                HashedPassword = GetHash(userVm.Password),
+                HashedPassword = _hashingService.GetHash(userVm.Password),
                 IsAdmin = false
             };
             await _userRepository.AddAsync(user);
@@ -138,7 +147,7 @@ namespace TerribleBankInc.Services
                 };
             }
 
-            user.HashedPassword = GetHash(newPassword);
+            user.HashedPassword = _hashingService.GetHash(newPassword);
             user.ForgotPasswordExpiration = null;
             user.ForgotPasswordToken = null;
             await _userRepository.UpdateAsync(user);
@@ -149,11 +158,6 @@ namespace TerribleBankInc.Services
             };
         }
 
-        private string GetHash(string input)
-        {
-            SHA1 veryStrongEncryptor = new SHA1CryptoServiceProvider();
-            var hash = veryStrongEncryptor.ComputeHash(Encoding.UTF8.GetBytes(input));
-            return string.Concat(hash.Select(b => b.ToString("x2")));
-        }
+        
     }
 }
