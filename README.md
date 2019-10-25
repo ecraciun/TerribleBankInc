@@ -14,15 +14,16 @@ Demo for security basics talks
 - [ ] x-content-type-options
 - [ ] server / framework headers
 - [ ] sri
-- [ ] password storage
-- [ ] exceptions
+- [x] password storage
+- [x] exceptions
 - [ ] logs
-- [ ] swagger
+- [x] swagger
 - [ ] injections
 - [ ] xss
 - [ ] csrf / xsrf
-- [ ] insecure direct object references
+- [x] insecure direct object references
 - [ ] mass assignment risk
+- [x] unchecked redirects
 - [x] security.txt (https://securitytxt.org/)
 
 Should be way more than enough.
@@ -31,7 +32,7 @@ Should be way more than enough.
 - [x] login / register / logout / forgot password / change password
 - [x] view/edit profile info
 - [x] view & manage accounts: list, create, block
-- [ ] transfers: send to, history with search
+- [x] transfers: send to, history
 
 I believe this should suffice for now.
 

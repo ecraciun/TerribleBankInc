@@ -24,7 +24,7 @@ namespace TerribleBankInc.Controllers
         {
             if (id == null)
             {
-                id = GetCurrentUserId();
+                id = GetCurrentClientId();
             }
 
             var client = await _clientService.Get(id.Value);

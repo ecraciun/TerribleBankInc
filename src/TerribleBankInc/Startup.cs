@@ -2,13 +2,13 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using TerribleBankInc.Data;
 using TerribleBankInc.Repositories;
 using TerribleBankInc.Services;
 using AutoMapper;
 using System.Reflection;
+using Microsoft.OpenApi.Models;
 using TerribleBankInc.Repositories.Interfaces;
 using TerribleBankInc.Services.Interfaces;
 
@@ -44,7 +44,6 @@ namespace TerribleBankInc
                     options.ClaimsIssuer = "TerribleBankInc";
                 });
             services.AddHttpContextAccessor();
-            //services.AddControllersWithViews();
 
             services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             services.AddScoped<IAuthenticationService, AuthenticationService>();
@@ -53,6 +52,8 @@ namespace TerribleBankInc
             services.AddScoped<IBankTransferService, BankTransferService>();
             services.AddScoped<IHashingService, SimpleHashingService>();
             //services.AddScoped<IHashingService, BetterHashingService>();
+
+            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo { Title = "TerribleBank API", Version = "v1" }); });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -71,25 +72,36 @@ namespace TerribleBankInc
             app.UseAuthentication();
             app.UseAuthorization();
 
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
+            app.UseDeveloperExceptionPage();
+            app.UseDatabaseErrorPage();
+
+            //if (env.IsDevelopment())
+            //{
+            //    app.UseDeveloperExceptionPage();
+            //    app.UseDatabaseErrorPage();
+            //}
+            //else
+            //{
+            //    app.UseExceptionHandler("/Home/Error");
+            //    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+            //    app.UseHsts();
+            //}
             app.UseHttpsRedirection();
-            
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
+                    name: "api",
+                    pattern: "api/{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+            });
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
         }
     }

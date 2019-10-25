@@ -35,9 +35,17 @@ namespace TerribleBankInc.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> GetAllTransactions()
+        {
+            var clientId = GetCurrentClientId();
+            var transactions = await _bankTransferService.GetAllForClient(clientId);
+            return View(transactions);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> CreateTransfer()
         {
-            var clientId = GetCurrentUserId();
+            var clientId = GetCurrentClientId();
             var activeAccounts = (await _bankAccountService.GetAllAccountsForClient(clientId))
                 .Where(x => x.Enabled && x.Approved.HasValue && x.Approved.Value).ToList();
 

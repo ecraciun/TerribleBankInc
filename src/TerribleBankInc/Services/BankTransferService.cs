@@ -57,5 +57,11 @@ namespace TerribleBankInc.Services
             return await _bankTransactionRepository.Get(x =>
                 x.SourceAccountId == accountId && x.DestinationAccountId == accountId);
         }
+
+        public async Task<List<BankTransaction>> GetAllForClient(int clientId)
+        {
+            return await _bankTransactionRepository.Get(x =>
+                x.SourceClientId == clientId && x.DestinationClientId == clientId);
+        }
     }
 }

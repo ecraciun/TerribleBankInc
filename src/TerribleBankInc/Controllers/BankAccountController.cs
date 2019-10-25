@@ -23,7 +23,7 @@ namespace TerribleBankInc.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var clientId = GetCurrentUserId();
+            var clientId = GetCurrentClientId();
             var accounts = await _bankAccountService.GetAllAccountsForClient(clientId);
             var vm = new ClientBankAccountsViewModel
             {
@@ -49,7 +49,7 @@ namespace TerribleBankInc.Controllers
         [HttpGet]
         public async Task<IActionResult> RequestNew()
         {
-            var clientId = GetCurrentUserId();
+            var clientId = GetCurrentClientId();
             return View(new NewBankAccountRequestViewModel{ ClientId = clientId});
         }
 

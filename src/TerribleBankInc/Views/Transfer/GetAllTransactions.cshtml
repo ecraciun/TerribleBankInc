@@ -1,0 +1,11 @@
+﻿@model IEnumerable<TerribleBankInc.Models.Entities.BankTransaction>
+@{
+    var clientId = int.Parse(User.Identity.Name);
+}
+
+
+<h2>Incoming</h2>
+@await Html.PartialAsync("_TransactionsList", Model.Where(x => x.DestinationClientId == clientId))
+
+<h2>Outgoing</h2>
+@await Html.PartialAsync("_TransactionsList", Model.Where(x => x.SourceClientId == clientId))

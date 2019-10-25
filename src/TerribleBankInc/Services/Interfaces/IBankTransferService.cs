@@ -10,5 +10,7 @@ namespace TerribleBankInc.Services.Interfaces
         Task<bool> Send(BankTransactionViewModel transactionViewModel);
 
         Task<List<BankTransaction>> GetAllForAccount(int accountId);
+
+        Task<List<BankTransaction>> GetAllForClient(int clientId);
     }
 }
