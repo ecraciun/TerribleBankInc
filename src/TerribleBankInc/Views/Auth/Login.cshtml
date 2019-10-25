@@ -1,11 +1,12 @@
 ﻿@model TerribleBankInc.Models.ViewModels.LoginViewModel
 @{
     ViewData["Title"] = "Login";
+    var returnUrl = ViewData["ReturnUrl"];
 }
 
 <h1>Login</h1>
 
-<form asp-controller="Auth" asp-action="Login" method="post">
+<form asp-controller="Auth" asp-action="Login" method="post" asp-route-returnUrl="@returnUrl">
     <div>
         <label asp-for="Username">Username</label>
         <input asp-for="Username" />

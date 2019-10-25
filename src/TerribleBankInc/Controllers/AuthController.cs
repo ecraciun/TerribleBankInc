@@ -20,13 +20,14 @@ namespace TerribleBankInc.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult Login(string returnUrl = null)
         {
+            ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel loginViewModel)
+        public async Task<IActionResult> Login(LoginViewModel loginViewModel, string returnUrl = null)
         {
             if (ModelState.IsValid)
             {
@@ -34,6 +35,10 @@ namespace TerribleBankInc.Controllers
                 if (loginResult.IsSuccess)
                 {
                     await HandleLogin(loginResult.ClientUser);
+                    if (!string.IsNullOrEmpty(returnUrl))
+                    {
+                        return Redirect(returnUrl);
+                    }
                     return RedirectToAction(nameof(HomeController.Index), "Home");
                 }
                 else
