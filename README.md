@@ -22,7 +22,7 @@ Demo for security basics talks
 - [ ] xss
 - [ ] csrf / xsrf
 - [x] insecure direct object references
-- [ ] mass assignment risk
+- [x] mass assignment risk
 - [x] unchecked redirects
 - [x] security.txt (https://securitytxt.org/)
 
