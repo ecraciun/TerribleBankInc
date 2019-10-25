@@ -158,6 +158,9 @@ namespace TerribleBankInc.Services
             };
         }
 
-        
+        public async Task<User> GetUserByClientId(int id)
+        {
+            return (await _userRepository.Get(x => x.ClientId == id)).FirstOrDefault();
+        }
     }
 }

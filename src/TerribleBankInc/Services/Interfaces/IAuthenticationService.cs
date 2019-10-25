@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using TerribleBankInc.Models.Entities;
 using TerribleBankInc.Models.OperationResults;
 using TerribleBankInc.Models.ViewModels;
 
@@ -12,5 +13,6 @@ namespace TerribleBankInc.Services.Interfaces
         Task<ForgotPasswordResult> CreatePasswordForgetToken(string username);
         Task<bool> IsForgotPasswordTokenValid(string token);
         Task<OperationResult> ResetPasswordWithToken(string token, string newPassword);
+        Task<User> GetUserByClientId(int id);
     }
 }

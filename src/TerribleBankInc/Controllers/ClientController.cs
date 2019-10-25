@@ -3,6 +3,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TerribleBankInc.Models.Entities;
 using TerribleBankInc.Models.ViewModels;
 using TerribleBankInc.Services.Interfaces;
 
@@ -12,12 +13,14 @@ namespace TerribleBankInc.Controllers
     public class ClientController : BaseController
     {
         private readonly IClientService _clientService;
+        private readonly IAuthenticationService _authenticationService;
         private readonly IMapper _mapper;
 
-        public ClientController(IClientService clientService, IMapper mapper)
+        public ClientController(IClientService clientService, IMapper mapper, IAuthenticationService authenticationService)
         {
             _clientService = clientService;
             _mapper = mapper;
+            _authenticationService = authenticationService;
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -68,6 +71,20 @@ namespace TerribleBankInc.Controllers
                 return RedirectToAction(nameof(ClientController.Details), new { id });
             }
             return View(client);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditUsername()
+        {
+            var clientId = GetCurrentClientId();
+            var user = await _authenticationService.GetUserByClientId(clientId);
+            return View(_mapper.Map<UserProfileViewModel>(user));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditUsername(UserProfileViewModel vm)
+        {
+            return View(vm);
         }
     }
 }

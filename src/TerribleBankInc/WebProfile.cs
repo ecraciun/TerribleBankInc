@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using TerribleBankInc.Models;
 using TerribleBankInc.Models.Dtos;
 using TerribleBankInc.Models.Entities;
 using TerribleBankInc.Models.ViewModels;
@@ -19,6 +18,8 @@ namespace TerribleBankInc
 
             CreateMap<NewBankAccountRequestViewModel, BankAccount>();
             CreateMap<BankTransactionViewModel, BankTransaction>();
+
+            CreateMap<User, UserProfileViewModel>();
         }
     }
 }
