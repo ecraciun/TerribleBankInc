@@ -61,9 +61,11 @@ namespace TerribleBankInc.Services
                 };
             }
 
+            var clientUser = _mapper.Map<ClientUser>(user.Client);
+            clientUser.IsAdmin = user.IsAdmin;
             return new LoginResult
             {
-                ClientUser = _mapper.Map<ClientUser>(user.Client),
+                ClientUser = clientUser,
                 IsSuccess = true
             };
         }

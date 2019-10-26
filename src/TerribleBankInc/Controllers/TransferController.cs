@@ -26,7 +26,7 @@ namespace TerribleBankInc.Controllers
             _bankAccountService = bankAccountService;
         }
 
-        [HttpGet]
+        [HttpGet("/[controller]/[action]/{accountId}")]
         public async Task<IActionResult> GetTransactions(int accountId)
         {
             var transactions = await _bankTransferService.GetAllForAccount(accountId);
@@ -71,6 +71,7 @@ namespace TerribleBankInc.Controllers
         {
             if (ModelState.IsValid)
             {
+                transfer.SourceClientId = GetCurrentClientId();
                 var result = await _bankTransferService.Send(transfer);
                 if (result)
                 {

@@ -25,5 +25,10 @@ namespace DefinitelyNotStealing.Controllers
             var allCapturedGoodies = _ctx.Set<ExfiltratedData>().ToList();
             return View(allCapturedGoodies);
         }
+
+        public IActionResult Prize()
+        {
+            return View();
+        }
     }
 }

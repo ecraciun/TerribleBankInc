@@ -43,6 +43,7 @@ namespace TerribleBankInc.Services
             transaction.Timestamp = DateTime.UtcNow;
             transaction.Approved = true;
             transaction.DestinationAccountId = destinationAccount.ID;
+            transaction.DestinationClientId = destinationAccount.Client.ID;
             transaction.SourceAccountId = sourceAccount.ID;
 
             await _bankTransactionRepository.AddAsync(transaction);
@@ -55,13 +56,13 @@ namespace TerribleBankInc.Services
         public async Task<List<BankTransaction>> GetAllForAccount(int accountId)
         {
             return await _bankTransactionRepository.Get(x =>
-                x.SourceAccountId == accountId && x.DestinationAccountId == accountId);
+                x.SourceAccountId == accountId || x.DestinationAccountId == accountId);
         }
 
         public async Task<List<BankTransaction>> GetAllForClient(int clientId)
         {
             return await _bankTransactionRepository.Get(x =>
-                x.SourceClientId == clientId && x.DestinationClientId == clientId);
+                x.SourceClientId == clientId || x.DestinationClientId == clientId);
         }
     }
 }
