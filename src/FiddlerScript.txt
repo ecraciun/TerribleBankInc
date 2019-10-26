@@ -1,0 +1,11 @@
+    static function OnBeforeResponse(oSession: Session) {
+        if (m_Hide304s && oSession.responseCode == 304) {
+            oSession["ui-hide"] = "true";
+        }
+        
+        if(oSession.uriContains("jquery-3.4.1.js")){
+
+            // Set the response body to the div-less string
+            oSession.utilSetResponseBody(" alert('Modified!')"); 
+        }
+    }
