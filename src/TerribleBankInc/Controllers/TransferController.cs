@@ -87,7 +87,7 @@ namespace TerribleBankInc.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> TransferSent()
+        public IActionResult TransferSent()
         {
             return View();
         }

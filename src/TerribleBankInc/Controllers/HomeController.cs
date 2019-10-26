@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using ElmahCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using TerribleBankInc.Models.ViewModels;
@@ -22,6 +24,12 @@ namespace TerribleBankInc.Controllers
         public IActionResult Privacy()
         {
             return View();
+        }
+
+        public IActionResult Boom()
+        {
+            HttpContext.RiseError(new NotImplementedException("Forgot something?"));
+            return null;
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

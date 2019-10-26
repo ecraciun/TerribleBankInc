@@ -11,6 +11,9 @@ using System.Reflection;
 using Microsoft.OpenApi.Models;
 using TerribleBankInc.Repositories.Interfaces;
 using TerribleBankInc.Services.Interfaces;
+using ElmahCore.Mvc;
+using ElmahCore;
+using TerribleBankInc.Filters;
 
 namespace TerribleBankInc
 {
@@ -28,12 +31,19 @@ namespace TerribleBankInc
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddElmah<XmlFileErrorLog>(options =>
+            {
+                options.LogPath = "~/log";
+            });
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             services.AddDbContext<TerribleBankDbContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddMvc();
+            services.AddMvc(options =>
+            {
+                options.Filters.Add<CustomExceptionFilterAttribute>();
+            });
 
             services.AddAuthentication(TerribleCookieSchemeName)
                 .AddCookie(TerribleCookieSchemeName, options =>
@@ -66,6 +76,8 @@ namespace TerribleBankInc
             }
 
             app.UseStaticFiles();
+
+            app.UseElmah();
 
             app.UseRouting();
 

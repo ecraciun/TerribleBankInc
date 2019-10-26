@@ -16,11 +16,11 @@ Demo for security basics talks
 - [ ] sri
 - [x] password storage
 - [x] exceptions
-- [ ] logs
+- [x] logs
 - [x] swagger
 - [ ] injections
 - [ ] xss
-- [ ] csrf / xsrf
+- [x] csrf / xsrf
 - [x] insecure direct object references
 - [x] mass assignment risk
 - [x] unchecked redirects

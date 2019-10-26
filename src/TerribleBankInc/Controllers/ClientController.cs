@@ -59,7 +59,7 @@ namespace TerribleBankInc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, ClientViewModel client)
+        public IActionResult Edit(int id, ClientViewModel client)
         {
             if (id != client.ID)
             {
@@ -82,7 +82,7 @@ namespace TerribleBankInc.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditUsername(UserProfileViewModel vm)
+        public IActionResult EditUsername(UserProfileViewModel vm)
         {
             return View(vm);
         }

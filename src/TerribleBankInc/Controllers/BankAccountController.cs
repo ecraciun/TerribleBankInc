@@ -47,7 +47,7 @@ namespace TerribleBankInc.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> RequestNew()
+        public IActionResult RequestNew()
         {
             var clientId = GetCurrentClientId();
             return View(new NewBankAccountRequestViewModel{ ClientId = clientId});
