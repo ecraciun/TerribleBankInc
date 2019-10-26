@@ -89,6 +89,8 @@ namespace TerribleBankInc
 
                 //context.Response.Headers.Add("X-Frame-Options", "DENY");
 
+                //context.Response.Headers.Add("Content-Security-Policy", "default-src 'self' 'unsafe-inline';");
+
                 #endregion
                 return next();
             });

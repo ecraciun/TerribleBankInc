@@ -67,6 +67,7 @@ namespace TerribleBankInc.Controllers
         }
 
         [HttpPost]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateTransfer(BankTransactionViewModel transfer)
         {
             if (ModelState.IsValid)
