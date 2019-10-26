@@ -30,5 +30,10 @@ namespace DefinitelyNotStealing.Controllers
         {
             return View();
         }
+
+        public IActionResult Win()
+        {
+            return View();
+        }
     }
 }

@@ -83,9 +83,17 @@ namespace TerribleBankInc
 
                 //context.Response.Headers.Add("Referrer-Policy", "same-origin");
 
+                //context.Response.Headers.Add("Feature-Policy", "geolocation 'none';");
+
+                //context.Response.Headers.Add("Referrer-Policy", "same-origin");
+
+                //context.Response.Headers.Add("X-Frame-Options", "DENY");
+
                 #endregion
                 return next();
             });
+
+          
 
             app.UseStaticFiles();
 

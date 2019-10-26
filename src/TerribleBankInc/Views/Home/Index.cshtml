@@ -11,4 +11,18 @@
     <a href="https://google.com">External link</a>
 </div>
 
+<div class="text-center">
+    <a asp-action="Reflect">Reflect</a>
+</div>
+
 <img src="http://localhost:5000/img/bugs.jpg" width="1" height="1" />
+
+
+
+<script type="text/javascript">
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            console.log(`Lat: ${position.coords.latitude}, Long: ${position.coords.longitude}`);
+        });
+    }
+</script>

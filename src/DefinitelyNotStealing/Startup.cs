@@ -41,6 +41,13 @@ namespace DefinitelyNotStealing
                 context?.Database.Migrate();
             }
 
+            app.UseCors(opt =>
+            {
+                opt.AllowAnyOrigin();
+                opt.AllowAnyHeader();
+                opt.AllowAnyMethod();
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

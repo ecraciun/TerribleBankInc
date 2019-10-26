@@ -1,0 +1,13 @@
+﻿@model string
+@{
+    ViewData["Title"] = "Reflect";
+}
+
+<h1>Reflect</h1>
+
+<div>You searched for: @Html.Raw(Model)</div>
+
+<form method="get" asp-action="Reflect" asp-controller="Home">
+    <input type="text" name="search" />
+    <input type="submit" value="Search" />
+</form>

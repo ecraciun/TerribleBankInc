@@ -8,10 +8,10 @@ Demo for security basics talks
 - [x] hsts
 - [ ] csp
 - [x] referrer policy
-- [ ] feature policy
-- [ ] x-frame-options
-- [ ] x-xss-protection
-- [ ] x-content-type-options
+- [x] feature policy
+- [x] x-frame-options
+- [x] x-xss-protection
+- [x] x-content-type-options
 - [x] server / framework headers
 - [ ] sri
 - [x] password storage
@@ -19,7 +19,7 @@ Demo for security basics talks
 - [x] logs
 - [x] swagger
 - [ ] injections
-- [ ] xss
+- [x] xss
 - [x] mixed content
 - [x] csrf / xsrf
 - [x] insecure direct object references
