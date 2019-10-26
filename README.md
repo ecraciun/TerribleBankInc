@@ -5,14 +5,14 @@ Demo for security basics talks
 
 ## Things I'm thinking of including for the showcase
 - [x] robots.txt
-- [ ] hsts
+- [x] hsts
 - [ ] csp
-- [ ] referrer policy
+- [x] referrer policy
 - [ ] feature policy
 - [ ] x-frame-options
 - [ ] x-xss-protection
 - [ ] x-content-type-options
-- [ ] server / framework headers
+- [x] server / framework headers
 - [ ] sri
 - [x] password storage
 - [x] exceptions
@@ -20,6 +20,7 @@ Demo for security basics talks
 - [x] swagger
 - [ ] injections
 - [ ] xss
+- [x] mixed content
 - [x] csrf / xsrf
 - [x] insecure direct object references
 - [x] mass assignment risk

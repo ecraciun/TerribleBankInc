@@ -14,6 +14,7 @@ using TerribleBankInc.Services.Interfaces;
 using ElmahCore.Mvc;
 using ElmahCore;
 using TerribleBankInc.Filters;
+using Microsoft.AspNetCore.Http;
 
 namespace TerribleBankInc
 {
@@ -75,6 +76,17 @@ namespace TerribleBankInc
                 context?.Database.Migrate();
             }
 
+            app.Use((context, next) =>
+            {
+                context.Response.Cookies.Append("Leaky","Very sensitive data", new CookieOptions() { });
+                #region Later
+
+                //context.Response.Headers.Add("Referrer-Policy", "same-origin");
+
+                #endregion
+                return next();
+            });
+
             app.UseStaticFiles();
 
             app.UseElmah();
@@ -102,9 +114,6 @@ namespace TerribleBankInc
 
             app.UseEndpoints(endpoints =>
             {
-                //endpoints.MapControllerRoute(
-                //    name: "api",
-                //    pattern: "api/{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
@@ -115,6 +124,8 @@ namespace TerribleBankInc
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
+
+            
         }
     }
 }

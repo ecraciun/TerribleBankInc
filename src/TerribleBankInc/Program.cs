@@ -18,6 +18,7 @@ namespace TerribleBankInc
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+            //.ConfigureWebHost(c => c.UseKestrel(k => k.AddServerHeader = false))
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
