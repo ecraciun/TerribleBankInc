@@ -6,6 +6,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using TerribleBankInc.Models.Entities;
 using TerribleBankInc.Models.Enums;
 using TerribleBankInc.Models.ViewModels;
 using TerribleBankInc.Services.Interfaces;
@@ -54,14 +55,8 @@ namespace TerribleBankInc.Controllers
                 ActiveAccounts = new  List<SelectListItem>(),
                 SourceClientId = 1
             };
-            foreach (var account in activeAccounts)
-            {
-                vm.ActiveAccounts.Add(new SelectListItem
-                {
-                    Value = account.AccountNumber,
-                    Text = $"{account.AccountNumber} | {Enum.GetName(typeof(CurrencyTypes), account.Currency)} | Balance: {account.Balance}"
-                });
-            }
+
+            PopulateSelectListWithAccounts(activeAccounts, vm.ActiveAccounts);
 
             return View(vm);
         }
@@ -70,6 +65,7 @@ namespace TerribleBankInc.Controllers
         //[ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateTransfer(BankTransactionViewModel transfer)
         {
+            // Eur, 7856a896-25be-494c-829b-d97fc2f8c8ad, admin@a.a
             if (ModelState.IsValid)
             {
                 transfer.SourceClientId = GetCurrentClientId();
@@ -84,6 +80,10 @@ namespace TerribleBankInc.Controllers
                 }
             }
 
+            var activeAccounts = (await _bankAccountService.GetAllAccountsForClient(transfer.SourceClientId))
+                .Where(x => x.Enabled && x.Approved.HasValue && x.Approved.Value).ToList();
+            PopulateSelectListWithAccounts(activeAccounts, transfer.ActiveAccounts);
+
             return View(transfer);
         }
 
@@ -91,6 +91,23 @@ namespace TerribleBankInc.Controllers
         public IActionResult TransferSent()
         {
             return View();
+        }
+
+        private void PopulateSelectListWithAccounts(List<BankAccount> accounts, List<SelectListItem> selectList)
+        {
+            if(selectList == null)
+            {
+                selectList = new List<SelectListItem>();
+            }
+
+            foreach (var account in accounts)
+            {
+                selectList.Add(new SelectListItem
+                {
+                    Value = account.AccountNumber,
+                    Text = $"{account.AccountNumber} | {Enum.GetName(typeof(CurrencyTypes), account.Currency)} | Balance: {account.Balance}"
+                });
+            }
         }
     }
 }
