@@ -49,7 +49,7 @@ namespace TerribleBankInc.Controllers
             //WebUtility.HtmlEncode(search)
             // https://www.chromium.org/developers/design-documents/xss-auditor
 
-            Response.Headers.Add("X-XSS-Protection", "1; mode=block; report=\"https://localhost:5001/Home/Report\"");
+            //Response.Headers.Add("X-XSS-Protection", "1; mode=block; report=\"https://localhost:5001/Home/Report\"");
             
             return View(nameof(Reflect), search);
         }
@@ -62,12 +62,6 @@ namespace TerribleBankInc.Controllers
             var stringData = await sr.ReadToEndAsync();
             return Ok();
         }
-
-
-
-
-
-
 
 
         public string ImageJpg()
