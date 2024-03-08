@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using TerribleBankInc.Data;
 using TerribleBankInc.Repositories;
 using TerribleBankInc.Services;
-using AutoMapper;
 using System.Reflection;
 using Microsoft.OpenApi.Models;
 using TerribleBankInc.Repositories.Interfaces;
@@ -16,126 +15,121 @@ using ElmahCore;
 using TerribleBankInc.Filters;
 using Microsoft.AspNetCore.Http;
 
-namespace TerribleBankInc
+namespace TerribleBankInc;
+
+public class Startup
 {
-    public class Startup
+    public const string TerribleCookieSchemeName = "TerribleIncScheme";
+
+    public Startup(IConfiguration configuration)
     {
-        public const string TerribleCookieSchemeName = "TerribleIncScheme";
+        Configuration = configuration;
+    }
 
-        public Startup(IConfiguration configuration)
+    public IConfiguration Configuration { get; }
+
+    // This method gets called by the runtime. Use this method to add services to the container.
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddElmah<XmlFileErrorLog>(options =>
         {
-            Configuration = configuration;
+            options.LogPath = "~/log";
+        });
+        services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
+        services.AddDbContext<TerribleBankDbContext>(
+            options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+        services.AddMvc(options =>
+        {
+            options.Filters.Add<CustomExceptionFilterAttribute>();
+        });
+
+        services.AddAuthentication(TerribleCookieSchemeName)
+            .AddCookie(TerribleCookieSchemeName, options =>
+            {
+                options.AccessDeniedPath = "/Auth/AccessDenied";
+                options.LoginPath = "/Auth/Login";
+                options.LogoutPath = "/Auth/Logout";
+                options.ClaimsIssuer = "TerribleBankInc";
+            });
+        services.AddHttpContextAccessor();
+
+        services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+        services.AddScoped<IAuthenticationService, AuthenticationService>();
+        services.AddScoped<IClientService, ClientService>();
+        services.AddScoped<IBankAccountService, BankAccountService>();
+        services.AddScoped<IBankTransferService, BankTransferService>();
+        services.AddScoped<IHashingService, SimpleHashingService>();
+        //services.AddScoped<IHashingService, BetterHashingService>();
+
+        services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo { Title = "TerribleBank API", Version = "v1" }); });
+    }
+
+    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+        {
+            var context = serviceScope.ServiceProvider.GetService<TerribleBankDbContext>();
+            context?.Database.Migrate();
         }
 
-        public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        app.Use((context, next) =>
         {
-            services.AddElmah<XmlFileErrorLog>(options =>
-            {
-                options.LogPath = "~/log";
-            });
-            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            context.Response.Cookies.Append("Leaky","Very sensitive data", new CookieOptions() { });
+            #region Later
 
-            services.AddDbContext<TerribleBankDbContext>(
-                options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            //context.Response.Headers.Add("Referrer-Policy", "same-origin");
 
-            services.AddMvc(options =>
-            {
-                options.Filters.Add<CustomExceptionFilterAttribute>();
-            });
+            //context.Response.Headers.Add("Feature-Policy", "geolocation 'none';");
 
-            services.AddAuthentication(TerribleCookieSchemeName)
-                .AddCookie(TerribleCookieSchemeName, options =>
-                {
-                    options.AccessDeniedPath = "/Auth/AccessDenied";
-                    options.LoginPath = "/Auth/Login";
-                    options.LogoutPath = "/Auth/Logout";
-                    options.ClaimsIssuer = "TerribleBankInc";
-                });
-            services.AddHttpContextAccessor();
+            //context.Response.Headers.Add("Referrer-Policy", "same-origin");
 
-            services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
-            services.AddScoped<IAuthenticationService, AuthenticationService>();
-            services.AddScoped<IClientService, ClientService>();
-            services.AddScoped<IBankAccountService, BankAccountService>();
-            services.AddScoped<IBankTransferService, BankTransferService>();
-            services.AddScoped<IHashingService, SimpleHashingService>();
-            //services.AddScoped<IHashingService, BetterHashingService>();
+            //context.Response.Headers.Add("X-Frame-Options", "DENY");
 
-            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo { Title = "TerribleBank API", Version = "v1" }); });
-        }
+            //context.Response.Headers.Add("Content-Security-Policy", "default-src 'self' 'unsafe-inline';");
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+            #endregion
+            return next();
+        });
+
+        app.UseStaticFiles();
+
+        app.UseElmah();
+
+        app.UseRouting();
+
+        app.UseAuthentication();
+        app.UseAuthorization();
+
+        app.UseDeveloperExceptionPage();
+        app.UseDatabaseErrorPage();
+
+        //if (env.IsDevelopment())
+        //{
+        //    app.UseDeveloperExceptionPage();
+        //    app.UseDatabaseErrorPage();
+        //}
+        //else
+        //{
+        //    app.UseExceptionHandler("/Home/Error");
+        //    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+        //    app.UseHsts();
+        //}
+        app.UseHttpsRedirection();
+
+        app.UseEndpoints(endpoints =>
         {
-            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
-            {
-                var context = serviceScope.ServiceProvider.GetService<TerribleBankDbContext>();
-                context?.Database.Migrate();
-            }
+            endpoints.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=Home}/{action=Index}/{id?}");
+        });
 
-            app.Use((context, next) =>
-            {
-                context.Response.Cookies.Append("Leaky","Very sensitive data", new CookieOptions() { });
-                #region Later
-
-                //context.Response.Headers.Add("Referrer-Policy", "same-origin");
-
-                //context.Response.Headers.Add("Feature-Policy", "geolocation 'none';");
-
-                //context.Response.Headers.Add("Referrer-Policy", "same-origin");
-
-                //context.Response.Headers.Add("X-Frame-Options", "DENY");
-
-                //context.Response.Headers.Add("Content-Security-Policy", "default-src 'self' 'unsafe-inline';");
-
-                #endregion
-                return next();
-            });
-
-          
-
-            app.UseStaticFiles();
-
-            app.UseElmah();
-
-            app.UseRouting();
-
-            app.UseAuthentication();
-            app.UseAuthorization();
-
-            app.UseDeveloperExceptionPage();
-            app.UseDatabaseErrorPage();
-
-            //if (env.IsDevelopment())
-            //{
-            //    app.UseDeveloperExceptionPage();
-            //    app.UseDatabaseErrorPage();
-            //}
-            //else
-            //{
-            //    app.UseExceptionHandler("/Home/Error");
-            //    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-            //    app.UseHsts();
-            //}
-            app.UseHttpsRedirection();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-            });
-
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-            });
-
-            
-        }
+        app.UseSwagger();
+        app.UseSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+        });
     }
 }

@@ -3,23 +3,22 @@ using TerribleBankInc.Models.Dtos;
 using TerribleBankInc.Models.Entities;
 using TerribleBankInc.Models.ViewModels;
 
-namespace TerribleBankInc
+namespace TerribleBankInc;
+
+public class WebProfile : Profile
 {
-    public class WebProfile : Profile
+    public WebProfile()
     {
-        public WebProfile()
-        {
-            CreateMap<Client, ClientUser>().ForMember(dest => dest.ClientId, opt => opt.MapFrom(src => src.ID));
+        CreateMap<Client, ClientUser>().ForMember(dest => dest.ClientId, opt => opt.MapFrom(src => src.ID));
 
-            CreateMap<RegisterViewModel, Client>();
+        CreateMap<RegisterViewModel, Client>();
 
-            CreateMap<Client, ClientViewModel>();
-            CreateMap<ClientViewModel, Client>();
+        CreateMap<Client, ClientViewModel>();
+        CreateMap<ClientViewModel, Client>();
 
-            CreateMap<NewBankAccountRequestViewModel, BankAccount>();
-            CreateMap<BankTransactionViewModel, BankTransaction>();
+        CreateMap<NewBankAccountRequestViewModel, BankAccount>();
+        CreateMap<BankTransactionViewModel, BankTransaction>();
 
-            CreateMap<User, UserProfileViewModel>();
-        }
+        CreateMap<User, UserProfileViewModel>();
     }
 }
