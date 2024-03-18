@@ -1,9 +1,8 @@
 ﻿using TerribleBankInc.Models.Dtos;
 
-namespace TerribleBankInc.Models.OperationResults
+namespace TerribleBankInc.Models.OperationResults;
+
+public class LoginResult : OperationResult
 {
-    public class LoginResult : OperationResult
-    {
-        public ClientUser ClientUser { get; set; }
-    }
+    public ClientUser ClientUser { get; set; }
 }

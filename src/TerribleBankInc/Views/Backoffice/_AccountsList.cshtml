@@ -1,4 +1,5 @@
-﻿@model IEnumerable<TerribleBankInc.Models.Entities.BankAccount>
+﻿@using TerribleBankInc.Models.Entities
+@model IEnumerable<TerribleBankInc.Models.Entities.BankAccount>
 
 <table class="table">
     <thead>
@@ -28,33 +29,34 @@
     </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Client.Email)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Currency)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.AccountNumber)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Balance)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Enabled)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Approved)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Reason)
-        </td>
-        <td>
-            @Html.ActionLink("Details", "ReviewAccount", new {accountId = item.ID})
-        </td>
-    </tr>
-}
+    @foreach (BankAccount item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Client.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Currency)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AccountNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Balance)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Enabled)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Approved)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Reason)
+            </td>
+            <td>
+                @Html.ActionLink("Details", "ReviewAccount", new { accountId = item.ID })
+            </td>
+        </tr>
+    }
     </tbody>
 </table>

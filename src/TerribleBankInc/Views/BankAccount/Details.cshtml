@@ -2,7 +2,7 @@
 
 <div>
     <h4>Account details</h4>
-    <hr />
+    <hr/>
     <dl class="row">
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Currency)
@@ -45,8 +45,8 @@
 <div>
     @if (Model.Approved.HasValue && Model.Approved.Value)
     {
-        @Html.ActionLink("See transactions", "GetTransactions", "Transfer", new { id = Model.ID }) 
-        <br />
+        @Html.ActionLink("See transactions", "GetTransactions", "Transfer", new { id = Model.ID })
+        <br/>
     }
 
     <a asp-action="Index">Back to List</a>

@@ -1,19 +1,19 @@
+using System.Reflection;
+using ElmahCore;
+using ElmahCore.Mvc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
-using TerribleBankInc.Data;
-using TerribleBankInc.Repositories;
-using TerribleBankInc.Services;
-using System.Reflection;
 using Microsoft.OpenApi.Models;
-using TerribleBankInc.Repositories.Interfaces;
-using TerribleBankInc.Services.Interfaces;
-using ElmahCore.Mvc;
-using ElmahCore;
+using TerribleBankInc.Data;
 using TerribleBankInc.Filters;
-using Microsoft.AspNetCore.Http;
+using TerribleBankInc.Repositories;
+using TerribleBankInc.Repositories.Interfaces;
+using TerribleBankInc.Services;
+using TerribleBankInc.Services.Interfaces;
 
 namespace TerribleBankInc;
 
@@ -37,22 +37,27 @@ public class Startup
         });
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
-        services.AddDbContext<TerribleBankDbContext>(
-            options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+        services.AddDbContext<TerribleBankDbContext>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+        );
 
         services.AddMvc(options =>
         {
             options.Filters.Add<CustomExceptionFilterAttribute>();
         });
 
-        services.AddAuthentication(TerribleCookieSchemeName)
-            .AddCookie(TerribleCookieSchemeName, options =>
-            {
-                options.AccessDeniedPath = "/Auth/AccessDenied";
-                options.LoginPath = "/Auth/Login";
-                options.LogoutPath = "/Auth/Logout";
-                options.ClaimsIssuer = "TerribleBankInc";
-            });
+        services
+            .AddAuthentication(TerribleCookieSchemeName)
+            .AddCookie(
+                TerribleCookieSchemeName,
+                options =>
+                {
+                    options.AccessDeniedPath = "/Auth/AccessDenied";
+                    options.LoginPath = "/Auth/Login";
+                    options.LogoutPath = "/Auth/Logout";
+                    options.ClaimsIssuer = "TerribleBankInc";
+                }
+            );
         services.AddHttpContextAccessor();
 
         services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
@@ -63,36 +68,52 @@ public class Startup
         services.AddScoped<IHashingService, SimpleHashingService>();
         //services.AddScoped<IHashingService, BetterHashingService>();
 
-        services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo { Title = "TerribleBank API", Version = "v1" }); });
+        services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "TerribleBank API", Version = "v1" });
+        });
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+        using (
+            IServiceScope serviceScope = app
+                .ApplicationServices.GetRequiredService<IServiceScopeFactory>()
+                .CreateScope()
+        )
         {
-            var context = serviceScope.ServiceProvider.GetService<TerribleBankDbContext>();
+            TerribleBankDbContext context =
+                serviceScope.ServiceProvider.GetService<TerribleBankDbContext>();
             context?.Database.Migrate();
         }
 
-        app.Use((context, next) =>
-        {
-            context.Response.Cookies.Append("Leaky","Very sensitive data", new CookieOptions() { });
-            #region Later
+        app.Use(
+            (context, next) =>
+            {
+                context.Response.Cookies.Append(
+                    "Leaky",
+                    "Very sensitive data",
+                    new CookieOptions() { }
+                );
 
-            //context.Response.Headers.Add("Referrer-Policy", "same-origin");
+                #region Later
 
-            //context.Response.Headers.Add("Feature-Policy", "geolocation 'none';");
+                //context.Response.Headers.Add("Referrer-Policy", "same-origin");
 
-            //context.Response.Headers.Add("Referrer-Policy", "same-origin");
+                //context.Response.Headers.Add("Feature-Policy", "geolocation 'none';");
 
-            //context.Response.Headers.Add("X-Frame-Options", "DENY");
+                //context.Response.Headers.Add("Referrer-Policy", "same-origin");
 
-            //context.Response.Headers.Add("Content-Security-Policy", "default-src 'self' 'unsafe-inline';");
+                //context.Response.Headers.Add("X-Frame-Options", "DENY");
 
-            #endregion
-            return next();
-        });
+                //context.Response.Headers.Add("Content-Security-Policy", "default-src 'self' 'unsafe-inline';");
+
+                #endregion
+
+                return next();
+            }
+        );
 
         app.UseStaticFiles();
 
@@ -121,9 +142,7 @@ public class Startup
 
         app.UseEndpoints(endpoints =>
         {
-            endpoints.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+            endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
         });
 
         app.UseSwagger();

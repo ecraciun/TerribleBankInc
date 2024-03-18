@@ -1,4 +1,5 @@
-﻿@model IEnumerable<DefinitelyNotStealing.Models.Entities.ExfiltratedData>
+﻿@using DefinitelyNotStealing.Models.Entities
+@model IEnumerable<DefinitelyNotStealing.Models.Entities.ExfiltratedData>
 
 @{
     ViewData["Title"] = "Index";
@@ -9,29 +10,30 @@
 <h2>Now what do we have here...</h2>
 <table class="table">
     <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Timestamp)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ClientIP)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DataType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Data)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CorrelationId)
-            </th>
-        </tr>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Timestamp)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ClientIP)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DataType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Data)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CorrelationId)
+        </th>
+    </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+    @foreach (ExfiltratedData item in Model)
+    {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.ID)
@@ -52,6 +54,6 @@
                 @Html.DisplayFor(modelItem => item.CorrelationId)
             </td>
         </tr>
-}
+    }
     </tbody>
 </table>

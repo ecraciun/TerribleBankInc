@@ -9,7 +9,8 @@ public class WebProfile : Profile
 {
     public WebProfile()
     {
-        CreateMap<Client, ClientUser>().ForMember(dest => dest.ClientId, opt => opt.MapFrom(src => src.ID));
+        CreateMap<Client, ClientUser>()
+            .ForMember(dest => dest.ClientId, opt => opt.MapFrom(src => src.ID));
 
         CreateMap<RegisterViewModel, Client>();
 

@@ -1,8 +1,7 @@
-﻿namespace TerribleBankInc.Models.OperationResults
+﻿namespace TerribleBankInc.Models.OperationResults;
+
+public class OperationResult
 {
-    public class OperationResult
-    {
-        public bool IsSuccess { get; set; }
-        public string Message { get; set; }
-    }
+    public bool IsSuccess { get; set; }
+    public string Message { get; set; }
 }

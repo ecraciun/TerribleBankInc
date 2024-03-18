@@ -1,8 +1,7 @@
-﻿namespace TerribleBankInc.Helpers
+﻿namespace TerribleBankInc.Helpers;
+
+public static class Constants
 {
-    public static class Constants
-    {
-        public const string AdminRole = "Admin";
-        public const string MemberRole = "Member";
-    }
+    public const string AdminRole = "Admin";
+    public const string MemberRole = "Member";
 }

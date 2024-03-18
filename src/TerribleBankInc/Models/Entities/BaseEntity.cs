@@ -1,7 +1,6 @@
-namespace TerribleBankInc.Models.Entities
+namespace TerribleBankInc.Models.Entities;
+
+public class BaseEntity
 {
-    public class BaseEntity
-    {
-        public int ID { get; set; }
-    }
+    public int ID { get; set; }
 }

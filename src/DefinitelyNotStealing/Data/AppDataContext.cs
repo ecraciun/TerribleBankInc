@@ -1,39 +1,26 @@
 ﻿using DefinitelyNotStealing.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace DefinitelyNotStealing.Data
+namespace DefinitelyNotStealing.Data;
+
+public class AppDataContext : DbContext
 {
-    public class AppDataContext : DbContext
+    public AppDataContext(DbContextOptions options)
+        : base(options) { }
+
+    public DbSet<ExfiltratedData> Goodies { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        public AppDataContext(DbContextOptions options) : base(options)
-        { }
+        base.OnModelCreating(modelBuilder);
 
-        public DbSet<ExfiltratedData> Goodies { get; set; }
+        modelBuilder.Entity<ExfiltratedData>().ToTable(nameof(Goodies));
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-
-            modelBuilder.Entity<ExfiltratedData>().ToTable(nameof(Goodies));
-
-            modelBuilder.Entity<ExfiltratedData>()
-                .Property(x => x.ID)
-                .IsRequired();
-            modelBuilder.Entity<ExfiltratedData>()
-                 .Property(x => x.Data)
-                 .IsRequired();
-            modelBuilder.Entity<ExfiltratedData>()
-                .Property(x => x.ClientIP)
-                .IsRequired();
-            modelBuilder.Entity<ExfiltratedData>()
-                .Property(x => x.CorrelationId)
-                .IsRequired();
-            modelBuilder.Entity<ExfiltratedData>()
-                .Property(x => x.DataType)
-                .IsRequired();
-            modelBuilder.Entity<ExfiltratedData>()
-                .Property(x => x.Timestamp)
-                .IsRequired();
-        }
+        modelBuilder.Entity<ExfiltratedData>().Property(x => x.ID).IsRequired();
+        modelBuilder.Entity<ExfiltratedData>().Property(x => x.Data).IsRequired();
+        modelBuilder.Entity<ExfiltratedData>().Property(x => x.ClientIP).IsRequired();
+        modelBuilder.Entity<ExfiltratedData>().Property(x => x.CorrelationId).IsRequired();
+        modelBuilder.Entity<ExfiltratedData>().Property(x => x.DataType).IsRequired();
+        modelBuilder.Entity<ExfiltratedData>().Property(x => x.Timestamp).IsRequired();
     }
 }

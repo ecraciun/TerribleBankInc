@@ -9,63 +9,64 @@ using TerribleBankInc.Models;
 using TerribleBankInc.Models.Entities;
 using TerribleBankInc.Repositories.Interfaces;
 
-namespace TerribleBankInc.Repositories
+namespace TerribleBankInc.Repositories;
+
+public class BaseRepository<T> : IBaseRepository<T>
+    where T : BaseEntity
 {
-    public class BaseRepository<T> : IBaseRepository<T> where T: BaseEntity
+    private readonly TerribleBankDbContext _context;
+
+    public BaseRepository(TerribleBankDbContext context)
     {
-        private readonly TerribleBankDbContext _context;
+        _context = context ?? throw new ArgumentNullException();
+    }
 
-        public BaseRepository(TerribleBankDbContext context)
-        {
-            _context = context ?? throw new ArgumentNullException();
-        }
+    public async Task<T> FindAsync(int id)
+    {
+        return await _context.FindAsync<T>(id);
+    }
 
-        public async Task<T> FindAsync(int id)
-        {
-            return await _context.FindAsync<T>(id);
-        }
+    public IQueryable<T> GetAll()
+    {
+        return _context.Set<T>().AsQueryable();
+    }
 
-        public IQueryable<T> GetAll()
-        {
-            return _context.Set<T>().AsQueryable();
-        }
+    public async Task<T> UpdateAsync(T entity)
+    {
+        var result = _context.Update(entity);
+        await _context.SaveChangesAsync();
+        return result.Entity;
+    }
 
-        public async Task<T> UpdateAsync(T entity)
+    public async Task<T> AddAsync(T entity)
+    {
+        var result = await _context.AddAsync(entity);
+        await _context.SaveChangesAsync();
+        return result.Entity;
+    }
+
+    public async Task<bool> DeleteAsync(T entity)
+    {
+        bool found = await FindAsync(entity.ID) != null;
+
+        if (found)
         {
-            var result = _context.Update(entity);
+            _context.Remove(entity);
             await _context.SaveChangesAsync();
-            return result.Entity;
         }
 
-        public async Task<T> AddAsync(T entity)
-        {
-            var result = await _context.AddAsync(entity);
-            await _context.SaveChangesAsync();
-            return result.Entity;
-        }
+        return found;
+    }
 
-        public async Task<bool> DeleteAsync(T entity)
-        {
-            var found = (await FindAsync(entity.ID)) != null;
+    public async Task<List<T>> Get(
+        Expression<Func<T, bool>> predicate,
+        string includeProperties = null
+    )
+    {
+        var query = _context.Set<T>().Where(predicate);
+        if (!string.IsNullOrEmpty(includeProperties))
+            query = query.Include(includeProperties);
 
-            if (found)
-            {
-                _context.Remove(entity);
-                await _context.SaveChangesAsync();
-            }
-
-            return found;
-        }
-
-        public async Task<List<T>> Get(Expression<Func<T, bool>> predicate, string includeProperties = null)
-        {
-            var query = _context.Set<T>().Where(predicate);
-            if (!string.IsNullOrEmpty(includeProperties))
-            {
-                query = query.Include(includeProperties);
-            }
-
-            return await query.ToListAsync();
-        }
+        return await query.ToListAsync();
     }
 }

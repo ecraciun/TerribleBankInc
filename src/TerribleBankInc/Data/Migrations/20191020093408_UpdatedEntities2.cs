@@ -9,48 +9,45 @@ namespace TerribleBankInc.Data.Migrations
             migrationBuilder.AddColumn<string>(
                 name: "Details",
                 table: "Transactions",
-                nullable: true);
+                nullable: true
+            );
 
             migrationBuilder.AddColumn<string>(
                 name: "SourceAccountNumber",
                 table: "Transactions",
-                nullable: true);
+                nullable: true
+            );
 
             migrationBuilder.AddColumn<string>(
                 name: "SourceClientEmail",
                 table: "Transactions",
-                nullable: true);
+                nullable: true
+            );
 
             migrationBuilder.AlterColumn<bool>(
                 name: "Approved",
                 table: "BankAccounts",
                 nullable: true,
                 oldClrType: typeof(bool),
-                oldType: "bit");
+                oldType: "bit"
+            );
 
             migrationBuilder.AddColumn<string>(
                 name: "Reason",
                 table: "BankAccounts",
-                nullable: true);
+                nullable: true
+            );
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "Details",
-                table: "Transactions");
+            migrationBuilder.DropColumn(name: "Details", table: "Transactions");
 
-            migrationBuilder.DropColumn(
-                name: "SourceAccountNumber",
-                table: "Transactions");
+            migrationBuilder.DropColumn(name: "SourceAccountNumber", table: "Transactions");
 
-            migrationBuilder.DropColumn(
-                name: "SourceClientEmail",
-                table: "Transactions");
+            migrationBuilder.DropColumn(name: "SourceClientEmail", table: "Transactions");
 
-            migrationBuilder.DropColumn(
-                name: "Reason",
-                table: "BankAccounts");
+            migrationBuilder.DropColumn(name: "Reason", table: "BankAccounts");
 
             migrationBuilder.AlterColumn<bool>(
                 name: "Approved",
@@ -58,7 +55,8 @@ namespace TerribleBankInc.Data.Migrations
                 type: "bit",
                 nullable: false,
                 oldClrType: typeof(bool),
-                oldNullable: true);
+                oldNullable: true
+            );
         }
     }
 }

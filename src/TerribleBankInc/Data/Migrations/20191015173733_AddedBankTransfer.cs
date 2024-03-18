@@ -11,7 +11,8 @@ namespace TerribleBankInc.Data.Migrations
                 name: "Transactions",
                 columns: table => new
                 {
-                    ID = table.Column<int>(nullable: false)
+                    ID = table
+                        .Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     SourceClientId = table.Column<int>(nullable: false),
                     DestinationClientId = table.Column<int>(nullable: false),
@@ -32,52 +33,60 @@ namespace TerribleBankInc.Data.Migrations
                         column: x => x.DestinationAccountId,
                         principalTable: "BankAccounts",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict
+                    );
                     table.ForeignKey(
                         name: "FK_Transactions_Clients_DestinationClientId",
                         column: x => x.DestinationClientId,
                         principalTable: "Clients",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict
+                    );
                     table.ForeignKey(
                         name: "FK_Transactions_BankAccounts_SourceAccountId",
                         column: x => x.SourceAccountId,
                         principalTable: "BankAccounts",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Restrict
+                    );
                     table.ForeignKey(
                         name: "FK_Transactions_Clients_SourceClientId",
                         column: x => x.SourceClientId,
                         principalTable: "Clients",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                });
+                        onDelete: ReferentialAction.Restrict
+                    );
+                }
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_Transactions_DestinationAccountId",
                 table: "Transactions",
-                column: "DestinationAccountId");
+                column: "DestinationAccountId"
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_Transactions_DestinationClientId",
                 table: "Transactions",
-                column: "DestinationClientId");
+                column: "DestinationClientId"
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_Transactions_SourceAccountId",
                 table: "Transactions",
-                column: "SourceAccountId");
+                column: "SourceAccountId"
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_Transactions_SourceClientId",
                 table: "Transactions",
-                column: "SourceClientId");
+                column: "SourceClientId"
+            );
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Transactions");
+            migrationBuilder.DropTable(name: "Transactions");
         }
     }
 }

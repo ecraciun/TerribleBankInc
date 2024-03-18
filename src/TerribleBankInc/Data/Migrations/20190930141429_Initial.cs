@@ -11,7 +11,8 @@ namespace TerribleBankInc.Data.Migrations
                 name: "Clients",
                 columns: table => new
                 {
-                    ID = table.Column<int>(nullable: false)
+                    ID = table
+                        .Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FirstName = table.Column<string>(nullable: false),
                     LastName = table.Column<string>(nullable: false),
@@ -23,13 +24,15 @@ namespace TerribleBankInc.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Clients", x => x.ID);
-                });
+                }
+            );
 
             migrationBuilder.CreateTable(
                 name: "BankAccounts",
                 columns: table => new
                 {
-                    ID = table.Column<int>(nullable: false)
+                    ID = table
+                        .Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Currency = table.Column<int>(nullable: false),
                     AccountNumber = table.Column<string>(nullable: false),
@@ -44,14 +47,17 @@ namespace TerribleBankInc.Data.Migrations
                         column: x => x.ClientId,
                         principalTable: "Clients",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                        onDelete: ReferentialAction.Cascade
+                    );
+                }
+            );
 
             migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
-                    ID = table.Column<int>(nullable: false)
+                    ID = table
+                        .Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ClientId = table.Column<int>(nullable: false),
                     Username = table.Column<string>(nullable: false),
@@ -66,31 +72,32 @@ namespace TerribleBankInc.Data.Migrations
                         column: x => x.ClientId,
                         principalTable: "Clients",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                        onDelete: ReferentialAction.Cascade
+                    );
+                }
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_BankAccounts_ClientId",
                 table: "BankAccounts",
-                column: "ClientId");
+                column: "ClientId"
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_ClientId",
                 table: "Users",
                 column: "ClientId",
-                unique: true);
+                unique: true
+            );
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "BankAccounts");
+            migrationBuilder.DropTable(name: "BankAccounts");
 
-            migrationBuilder.DropTable(
-                name: "Users");
+            migrationBuilder.DropTable(name: "Users");
 
-            migrationBuilder.DropTable(
-                name: "Clients");
+            migrationBuilder.DropTable(name: "Clients");
         }
     }
 }

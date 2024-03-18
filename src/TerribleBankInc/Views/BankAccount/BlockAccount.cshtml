@@ -3,7 +3,7 @@
 <h3>Are you sure you want to block this account?</h3>
 <div>
     <h4>Account</h4>
-    <hr />
+    <hr/>
     <dl class="row">
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Currency)
@@ -36,10 +36,10 @@
             @Html.DisplayFor(model => model.Approved)
         </dd>
     </dl>
-    
+
     <form asp-action="BlockAccountConfirm" asp-route-ID="@Model.ID">
         @Html.HiddenFor(model => model.ID)
-        <input type="submit" value="Disable" class="btn btn-danger" /> |
+        <input type="submit" value="Disable" class="btn btn-danger"/> |
         <a asp-action="Index">Back to List</a>
     </form>
 </div>

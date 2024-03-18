@@ -11,7 +11,8 @@ namespace DefinitelyNotStealing.Data.Migrations
                 name: "Goodies",
                 columns: table => new
                 {
-                    ID = table.Column<int>(nullable: false)
+                    ID = table
+                        .Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Timestamp = table.Column<DateTime>(nullable: false),
                     ClientIP = table.Column<string>(nullable: false),
@@ -22,13 +23,13 @@ namespace DefinitelyNotStealing.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Goodies", x => x.ID);
-                });
+                }
+            );
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Goodies");
+            migrationBuilder.DropTable(name: "Goodies");
         }
     }
 }

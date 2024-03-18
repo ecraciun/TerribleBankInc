@@ -1,168 +1,150 @@
-﻿using AutoMapper;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
-using TerribleBankInc.Models;
+using AutoMapper;
 using TerribleBankInc.Models.Dtos;
 using TerribleBankInc.Models.Entities;
 using TerribleBankInc.Models.OperationResults;
 using TerribleBankInc.Models.ViewModels;
-using TerribleBankInc.Repositories;
 using TerribleBankInc.Repositories.Interfaces;
 using TerribleBankInc.Services.Interfaces;
 
-namespace TerribleBankInc.Services
+namespace TerribleBankInc.Services;
+
+public class AuthenticationService : IAuthenticationService
 {
-    public class AuthenticationService : IAuthenticationService
+    private const int ForgotTokenLifeInMinutes = 5;
+
+    private readonly IBaseRepository<Client> _clientRepository;
+    private readonly IBaseRepository<User> _userRepository;
+    private readonly IMapper _mapper;
+    private readonly IHashingService _hashingService;
+
+    public AuthenticationService(
+        IBaseRepository<Client> clientRepository,
+        IBaseRepository<User> userRepository,
+        IMapper mapper,
+        IHashingService hashingService
+    )
     {
-        private const int ForgotTokenLifeInMinutes = 5;
+        _clientRepository = clientRepository;
+        _userRepository = userRepository;
+        _mapper = mapper;
+        _hashingService = hashingService;
+    }
 
-        private readonly IBaseRepository<Client> _clientRepository;
-        private readonly IBaseRepository<User> _userRepository;
-        private readonly IMapper _mapper;
-        private readonly IHashingService _hashingService;
-
-        public AuthenticationService(IBaseRepository<Client> clientRepository, IBaseRepository<User> userRepository, IMapper mapper, IHashingService hashingService)
-        {
-            _clientRepository = clientRepository;
-            _userRepository = userRepository;
-            _mapper = mapper;
-            _hashingService = hashingService;
-        }
-
-        public async Task<LoginResult> LoginAsync(string username, string password)
-        {
-            var user = (await _userRepository.Get(x => x.Username == username, nameof(User.Client))).FirstOrDefault();
-            if (user == null)
-            {
-                return new LoginResult
-                {
-                    IsSuccess = false,
-                    Message = "No user registered with provided email."
-                };
-            }
-
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-            var hash = _hashingService.GetHash(password);
-            sw.Stop();
-
-            Debug.WriteLine($"\n\n\nHASHING TIME: {sw.ElapsedMilliseconds}");
-
-            if (!hash.Equals(user.HashedPassword))
-            {
-                return new LoginResult
-                {
-                    IsSuccess = false,
-                    Message = "Incorrect password."
-                };
-            }
-
-            var clientUser = _mapper.Map<ClientUser>(user.Client);
-            clientUser.IsAdmin = user.IsAdmin;
+    public async Task<LoginResult> LoginAsync(string username, string password)
+    {
+        User user = (
+            await _userRepository.Get(x => x.Username == username, nameof(User.Client))
+        ).FirstOrDefault();
+        if (user == null)
             return new LoginResult
             {
-                ClientUser = clientUser,
-                IsSuccess = true
+                IsSuccess = false,
+                Message = "No user registered with provided email."
             };
-        }
 
-        public async Task<bool> ChangePasswordAsync(int userId, string oldPassword, string newPassword)
+        Stopwatch sw = new();
+        sw.Start();
+        string hash = _hashingService.GetHash(password);
+        sw.Stop();
+
+        Debug.WriteLine($"\n\n\nHASHING TIME: {sw.ElapsedMilliseconds}");
+
+        if (!hash.Equals(user.HashedPassword))
+            return new LoginResult { IsSuccess = false, Message = "Incorrect password." };
+
+        ClientUser clientUser = _mapper.Map<ClientUser>(user.Client);
+        clientUser.IsAdmin = user.IsAdmin;
+        return new LoginResult { ClientUser = clientUser, IsSuccess = true };
+    }
+
+    public async Task<bool> ChangePasswordAsync(int userId, string oldPassword, string newPassword)
+    {
+        User user = await _userRepository.FindAsync(userId);
+        if (user != null && user.HashedPassword.Equals(_hashingService.GetHash(oldPassword)))
         {
-            var user = await _userRepository.FindAsync(userId);
-            if(user != null && user.HashedPassword.Equals(_hashingService.GetHash(oldPassword)))
-            {
-                user.HashedPassword = _hashingService.GetHash(newPassword);
-                await _userRepository.UpdateAsync(user);
-                return true;
-            }
-            return false;
-        }
-
-        public async Task<LoginResult> RegisterAsync(RegisterViewModel userVm)
-        {
-            var client = _mapper.Map<Client>(userVm);
-            client = await _clientRepository.AddAsync(client);
-            
-            var user = new User
-            {
-                ClientId = client.ID,
-                Username = client.Email,
-                HashedPassword = _hashingService.GetHash(userVm.Password),
-                IsAdmin = false
-            };
-            await _userRepository.AddAsync(user);
-
-            return new LoginResult
-            {
-                IsSuccess = true,
-                ClientUser = _mapper.Map<ClientUser>(client)
-            };
-        }
-
-        public async Task<ForgotPasswordResult> CreatePasswordForgetToken(string username)
-        {
-            var user = (await _userRepository.Get(x => x.Username == username)).FirstOrDefault();
-            if (user == null)
-            {
-                return new ForgotPasswordResult
-                {
-                    IsSuccess = false,
-                    Message = "No user registered with provided email."
-                };
-            }
-
-            user.ForgotPasswordToken = Guid.NewGuid().ToString();
-            user.ForgotPasswordExpiration = DateTime.UtcNow.AddMinutes(ForgotTokenLifeInMinutes);
+            user.HashedPassword = _hashingService.GetHash(newPassword);
             await _userRepository.UpdateAsync(user);
-
-            return new ForgotPasswordResult
-            {
-                IsSuccess = true,
-                ForgotPasswordExpiration = user.ForgotPasswordExpiration.Value,
-                ForgotPasswordToken = user.ForgotPasswordToken
-            };
-        }
-
-        public async Task<bool> IsForgotPasswordTokenValid(string token)
-        {
-            var user = (await _userRepository.Get(x => x.ForgotPasswordToken == token)).FirstOrDefault();
-            if (user == null) return false;
-
-            if (DateTime.UtcNow > user.ForgotPasswordExpiration.Value) return false;
-
             return true;
         }
 
-        public async Task<OperationResult> ResetPasswordWithToken(string token, string newPassword)
+        return false;
+    }
+
+    public async Task<LoginResult> RegisterAsync(RegisterViewModel userVm)
+    {
+        Client client = _mapper.Map<Client>(userVm);
+        client = await _clientRepository.AddAsync(client);
+
+        User user = new User
         {
-            var user = (await _userRepository.Get(x => x.ForgotPasswordToken == token)).FirstOrDefault();
-            if (user == null || user.ForgotPasswordExpiration.Value < DateTime.UtcNow)
-            {
-                return new OperationResult
-                {
-                    IsSuccess = false,
-                    Message = "Invalid token"
-                };
-            }
+            ClientId = client.ID,
+            Username = client.Email,
+            HashedPassword = _hashingService.GetHash(userVm.Password),
+            IsAdmin = false
+        };
+        await _userRepository.AddAsync(user);
 
-            user.HashedPassword = _hashingService.GetHash(newPassword);
-            user.ForgotPasswordExpiration = null;
-            user.ForgotPasswordToken = null;
-            await _userRepository.UpdateAsync(user);
+        return new LoginResult { IsSuccess = true, ClientUser = _mapper.Map<ClientUser>(client) };
+    }
 
-            return new OperationResult
+    public async Task<ForgotPasswordResult> CreatePasswordForgetToken(string username)
+    {
+        User user = (await _userRepository.Get(x => x.Username == username)).FirstOrDefault();
+        if (user == null)
+            return new ForgotPasswordResult
             {
-                IsSuccess = true
+                IsSuccess = false,
+                Message = "No user registered with provided email."
             };
-        }
 
-        public async Task<User> GetUserByClientId(int id)
+        user.ForgotPasswordToken = Guid.NewGuid().ToString();
+        user.ForgotPasswordExpiration = DateTime.UtcNow.AddMinutes(ForgotTokenLifeInMinutes);
+        await _userRepository.UpdateAsync(user);
+
+        return new ForgotPasswordResult
         {
-            return (await _userRepository.Get(x => x.ClientId == id)).FirstOrDefault();
-        }
+            IsSuccess = true,
+            ForgotPasswordExpiration = user.ForgotPasswordExpiration.Value,
+            ForgotPasswordToken = user.ForgotPasswordToken
+        };
+    }
+
+    public async Task<bool> IsForgotPasswordTokenValid(string token)
+    {
+        User user = (
+            await _userRepository.Get(x => x.ForgotPasswordToken == token)
+        ).FirstOrDefault();
+        if (user == null)
+            return false;
+
+        if (DateTime.UtcNow > user.ForgotPasswordExpiration.Value)
+            return false;
+
+        return true;
+    }
+
+    public async Task<OperationResult> ResetPasswordWithToken(string token, string newPassword)
+    {
+        User user = (
+            await _userRepository.Get(x => x.ForgotPasswordToken == token)
+        ).FirstOrDefault();
+        if (user == null || user.ForgotPasswordExpiration.Value < DateTime.UtcNow)
+            return new OperationResult { IsSuccess = false, Message = "Invalid token" };
+
+        user.HashedPassword = _hashingService.GetHash(newPassword);
+        user.ForgotPasswordExpiration = null;
+        user.ForgotPasswordToken = null;
+        await _userRepository.UpdateAsync(user);
+
+        return new OperationResult { IsSuccess = true };
+    }
+
+    public async Task<User> GetUserByClientId(int id)
+    {
+        return (await _userRepository.Get(x => x.ClientId == id)).FirstOrDefault();
     }
 }

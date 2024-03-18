@@ -1,7 +1,6 @@
-﻿namespace TerribleBankInc.Services.Interfaces
+﻿namespace TerribleBankInc.Services.Interfaces;
+
+public interface IHashingService
 {
-    public interface IHashingService
-    {
-        string GetHash(string input);
-    }
+    string GetHash(string input);
 }

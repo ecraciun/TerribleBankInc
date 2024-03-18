@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace TerribleBankInc.Controllers
+namespace TerribleBankInc.Controllers;
+
+public class BaseController : Controller
 {
-    public class BaseController : Controller
+    protected int GetCurrentClientId()
     {
-        protected int GetCurrentClientId()
-        {
-            return int.Parse(User.Identity.Name);
-        }
+        return int.Parse(User.Identity.Name);
     }
 }
