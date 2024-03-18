@@ -68,6 +68,8 @@ public class Startup
         services.AddScoped<IHashingService, SimpleHashingService>();
         //services.AddScoped<IHashingService, BetterHashingService>();
 
+        services.AddDatabaseDeveloperPageExceptionFilter();
+        
         services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "TerribleBank API", Version = "v1" });
@@ -125,7 +127,6 @@ public class Startup
         app.UseAuthorization();
 
         app.UseDeveloperExceptionPage();
-        app.UseDatabaseErrorPage();
 
         //if (env.IsDevelopment())
         //{

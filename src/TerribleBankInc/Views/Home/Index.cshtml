@@ -10,9 +10,14 @@
 <div class="text-center">
     <a href="https://google.com">External link</a>
 </div>
-
+<div class="text-center">
+    <a asp-action="Boom">Explode in glorious error</a>
+</div>
 <div class="text-center">
     <a asp-action="Reflect">Reflect</a>
+</div>
+<div class="text-center">
+    <a asp-action="Reflect" asp-route-search="<script>alert('henlo h00man');</script>">Reflect with alert</a>
 </div>
 
 <img src="http://localhost:5000/img/bugs.jpg" width="1" height="1"/>

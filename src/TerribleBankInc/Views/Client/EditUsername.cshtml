@@ -7,6 +7,7 @@
         <form asp-action="EditUsername">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             @Html.HiddenFor(m => m.ID)
+            @Html.HiddenFor(m => m.IsAdmin)
             <div class="form-group">
                 <label asp-for="Username" class="control-label"></label>
                 <input asp-for="Username" class="form-control"/>
